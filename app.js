@@ -122,7 +122,7 @@ function proceedToSurvey(workerId) {
     } catch (e) {}
 
     const appId = "32459"; 
-    const secureHashSecret = "pcBsZvP0U2cCQqyb1fTexSJM9K5R9OA4";
+    const secureHashSecret = "pCbSzVp0U2cCQQyb1fTexSjM9K5R9OA4";
     
     // MD5 Function to generate secure hash
     const md5 = function(string) {
