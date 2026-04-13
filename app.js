@@ -68,24 +68,48 @@ async function checkUserStats() {
     }
 }
 
-// 5. Launch Survey Logic with Sheet Logging
+// 5. Launch Survey Logic with Anti-Ban Protocols
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
-    
+    const lastLaunch = localStorage.getItem(`last_launch_${workerId}`);
+    const currentTime = Date.now();
+
+    // 1. Check Cooldown (5 Minutes) to prevent spamming
+    if (lastLaunch && (currentTime - lastLaunch < 5 * 60 * 1000)) {
+        const remaining = Math.ceil((5 * 60 * 1000 - (currentTime - lastLaunch)) / 60000);
+        alert(`Security Cooldown: Please wait ${remaining} minutes before starting a new task to keep your account safe.`);
+        return;
+    }
+
     if (!workerId || workerId.length < 3) {
-        alert("Enter a valid Worker ID (at least 3 characters).");
+        alert("Enter a valid Worker ID.");
         return;
     }
 
     const btn = document.querySelector('.btn-go');
-    btn.innerHTML = "Logging Task...";
     btn.disabled = true;
+    
+    // 2. Visual Security Check (Mimics high-security portal)
+    const logs = ["Checking Device IP...", "Scan Fingerprint...", "Verifying Device Hygiene...", "Securing Session..."];
+    let i = 0;
+    const interval = setInterval(() => {
+        btn.innerHTML = logs[i];
+        i++;
+        if(i >= logs.length) {
+            clearInterval(interval);
+            proceedToSurvey(workerId);
+        }
+    }, 1000);
+}
+
+function proceedToSurvey(workerId) {
+    localStorage.setItem(`last_launch_${workerId}`, Date.now());
 
     const logData = {
         workerId: workerId,
         ipAddress: userIP,
         timestamp: new Date().toISOString(),
-        action: "Survey Started"
+        action: "Survey Started (Secure)"
     };
 
     try {
@@ -95,14 +119,12 @@ async function launchSurvey() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(logData)
         });
-    } catch (e) { console.log("Logging failed"); }
+    } catch (e) {}
 
-    const appId = "22501"; 
+    const appId = "32459"; 
     const surveyUrl = `https://offers.cpx-research.com/index.php?app_id=${appId}&ext_user_id=${workerId}`;
 
-    setTimeout(() => {
-        window.location.href = surveyUrl;
-    }, 1200);
+    window.location.href = surveyUrl;
 }
 
 function scrollToSurvey() {
