@@ -62,6 +62,22 @@ async function checkUserStats() {
     const btn = document.querySelector('.btn-secondary');
     btn.innerText = "Checking...";
     
+    // 🛡️ SECURITY SHIELD: Check if user is authorized before showing stats
+    try {
+        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+        const authStatus = await authResponse.text();
+
+        if (authStatus !== "AUTHORIZED") {
+            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
+            btn.innerText = "Check History";
+            return;
+        }
+    } catch (e) {
+        alert("Security Server Offline.");
+        btn.innerText = "Check History";
+        return;
+    }
+
     try {
         const response = await fetch(`${scriptUrl}?workerId=${workerId}`);
         const stats = await response.json();
@@ -75,7 +91,7 @@ async function checkUserStats() {
     } catch (e) {
         alert("Could not fetch stats. Make sure you have done at least 1 task.");
     } finally {
-        btn.innerText = "Check Stats";
+        btn.innerText = "Check History";
     }
 }
 
