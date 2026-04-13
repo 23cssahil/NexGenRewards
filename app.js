@@ -88,6 +88,12 @@ async function checkUserStats() {
         document.getElementById('user-status').innerText = stats.status;
         
         document.getElementById('user-stats-container').style.display = 'block';
+        
+        // 🕒 AUTO-HIDE: Stats will automatically disappear after 10 seconds
+        setTimeout(() => {
+            document.getElementById('user-stats-container').style.display = 'none';
+        }, 10000);
+
     } catch (e) {
         alert("Could not fetch stats. Make sure you have done at least 1 task.");
     } finally {
