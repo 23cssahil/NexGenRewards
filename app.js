@@ -122,9 +122,7 @@ function proceedToSurvey(workerId) {
     } catch (e) {}
 
     const appId = "32459"; 
-    // Adding a random timestamp to 'break' any old cache and fetch NEW surveys
-    const freshToken = Date.now();
-    const surveyUrl = `https://offers.cpx-research.com/index.php?app_id=${appId}&ext_user_id=${workerId}&t=${freshToken}`;
+    const surveyUrl = `https://offers.cpx-research.com/index.php?app_id=${appId}&ext_user_id=${workerId}`;
 
     window.location.href = surveyUrl;
 }
