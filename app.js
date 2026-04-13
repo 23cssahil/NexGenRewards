@@ -130,3 +130,24 @@ function proceedToSurvey(workerId) {
 function scrollToSurvey() {
     document.getElementById('survey-portal').scrollIntoView({ behavior: 'smooth' });
 }
+
+// --- NEW FEATURES LOGIC ---
+
+// Modal Logic
+const modal = document.getElementById("rules-modal");
+const rulesBtn = document.getElementById("rules-btn");
+const liveBtn = document.getElementById("live-btn");
+const closeX = document.querySelector(".close-modal");
+const closeBtn = document.getElementById("close-rules");
+
+if (rulesBtn) rulesBtn.onclick = () => modal.style.display = "block";
+if (closeX) closeX.onclick = () => modal.style.display = "none";
+if (closeBtn) closeBtn.onclick = () => modal.style.display = "none";
+window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
+
+// Live Button Scroll
+if (liveBtn) {
+    liveBtn.onclick = () => {
+        document.querySelector('.payouts').scrollIntoView({ behavior: 'smooth' });
+    };
+}
