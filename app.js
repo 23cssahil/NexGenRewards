@@ -68,19 +68,10 @@ async function checkUserStats() {
     }
 }
 
-// 5. Launch Survey Logic with Anti-Ban Protocols
+// 5. Launch Survey Logic (Always Fresh Surveys)
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
-    const lastLaunch = localStorage.getItem(`last_launch_${workerId}`);
-    const currentTime = Date.now();
-
-    // 1. Check Cooldown (5 Minutes) to prevent spamming
-    if (lastLaunch && (currentTime - lastLaunch < 5 * 60 * 1000)) {
-        const remaining = Math.ceil((5 * 60 * 1000 - (currentTime - lastLaunch)) / 60000);
-        alert(`Security Cooldown: Please wait ${remaining} minutes before starting a new task to keep your account safe.`);
-        return;
-    }
-
+    
     if (!workerId || workerId.length < 3) {
         alert("Enter a valid Worker ID.");
         return;
@@ -89,8 +80,8 @@ async function launchSurvey() {
     const btn = document.querySelector('.btn-go');
     btn.disabled = true;
     
-    // 2. Visual Security Check (Mimics high-security portal)
-    const logs = ["Checking Device IP...", "Scan Fingerprint...", "Verifying Device Hygiene...", "Securing Session..."];
+    // Visual Security Check
+    const logs = ["Connecting to Global Servers...", "Fetching New Surveys...", "Verifying ID...", "Securing Session..."];
     let i = 0;
     const interval = setInterval(() => {
         btn.innerHTML = logs[i];
@@ -99,17 +90,15 @@ async function launchSurvey() {
             clearInterval(interval);
             proceedToSurvey(workerId);
         }
-    }, 1000);
+    }, 800);
 }
 
 function proceedToSurvey(workerId) {
-    localStorage.setItem(`last_launch_${workerId}`, Date.now());
-
     const logData = {
         workerId: workerId,
         ipAddress: userIP,
         timestamp: new Date().toISOString(),
-        action: "Survey Started (Secure)"
+        action: "Survey Started (Fresh Fetch)"
     };
 
     try {
@@ -122,7 +111,9 @@ function proceedToSurvey(workerId) {
     } catch (e) {}
 
     const appId = "32459"; 
-    const surveyUrl = `https://offers.cpx-research.com/index.php?app_id=${appId}&ext_user_id=${workerId}`;
+    // Adding a random timestamp to 'break' any old cache and fetch NEW surveys
+    const freshToken = Date.now();
+    const surveyUrl = `https://offers.cpx-research.com/index.php?app_id=${appId}&ext_user_id=${workerId}&t=${freshToken}`;
 
     window.location.href = surveyUrl;
 }
