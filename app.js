@@ -18,25 +18,36 @@ document.addEventListener('mousemove', (e) => {
     glow.style.top = e.clientY + 'px';
 });
 
-// 3. Dynamic Payouts Animation
-const names = ["Amit", "Rahul", "Neha", "Sahil", "Priya", "Vikram", "Sonia", "Deepak", "Rohan", "Anjali"];
-const amounts = ["$0.50", "$1.20", "$0.85", "$2.10", "$1.50", "$0.75", "$3.00"];
+// 3. Real-Time Payouts Logic (Fetching from Google Sheets)
+async function fetchRealPayouts() {
+    const container = document.getElementById('payout-list-container');
+    try {
+        const response = await fetch(`${scriptUrl}?action=getLivePayouts`);
+        const payouts = await response.json();
+        
+        if (payouts.length === 0) {
+            container.innerHTML = '<p style="opacity:0.5; font-size:0.8rem;">Waiting for new completions...</p>';
+            return;
+        }
 
-function addRandomPayout() {
-    const list = document.getElementById('payout-list-container');
-    const name = names[Math.floor(Math.random() * names.length)];
-    const amount = amounts[Math.floor(Math.random() * amounts.length)];
-    
-    const item = document.createElement('div');
-    item.className = 'payout-item';
-    item.innerHTML = `<span>User ${name}***</span> just earned <b>${amount}</b>`;
-    
-    list.prepend(item);
-    if(list.children.length > 5) list.removeChild(list.lastChild);
+        container.innerHTML = '';
+        payouts.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'payout-item';
+            div.innerHTML = `
+                <span><strong>${p.workerId.substring(0,3)}***</strong> just earned <strong>${p.amount}</strong></span>
+                <span style="font-size: 0.7rem; color: var(--accent);">${p.time}</span>
+            `;
+            container.appendChild(div);
+        });
+    } catch (e) {
+        console.log("Stats update failed");
+    }
 }
 
-setInterval(addRandomPayout, 4000);
-addRandomPayout(); // Initial
+// Initial fetch and set interval
+fetchRealPayouts();
+setInterval(fetchRealPayouts, 30000); // 30 second me update hoga
 
 const scriptUrl = "https://script.google.com/macros/s/AKfycby5XJMPvdaqUUEU_PNSnHdn5coR6Nt-_Tb3seV56BY2MYtU8n8_DjuapbU2bS4vLg/exec";
 
