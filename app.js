@@ -90,6 +90,25 @@ async function launchSurvey() {
 
     const btn = document.querySelector('.btn-go');
     btn.disabled = true;
+    btn.innerHTML = "Authenticating ID...";
+
+    // 🛡️ SECURITY SHIELD: Check if user is authorized
+    try {
+        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+        const authStatus = await authResponse.text();
+
+        if (authStatus !== "AUTHORIZED") {
+            alert("⚠️ UNAUTHORIZED ID: You are not allowed to use this portal. Contact the Administrator.");
+            btn.disabled = false;
+            btn.innerHTML = "Launch Survey";
+            return;
+        }
+    } catch (e) {
+        alert("Security Server Offline. Try again later.");
+        btn.disabled = false;
+        btn.innerHTML = "Launch Survey";
+        return;
+    }
     
     // Visual Security Check
     const logs = ["Connecting to Global Servers...", "Fetching New Surveys...", "Verifying ID...", "Securing Session..."];
