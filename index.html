@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexGen Rewards | Earn Daily with Surveys</title>
+    <title>NexGen Rewards | Professional Earnings Portal</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -12,87 +12,91 @@
     
     <nav>
         <div class="logo">NexGen<span>Rewards</span></div>
-        <ul class="nav-links">
-            <li><a href="#how-it-works">How it Works</a></li>
-            <li><a href="#tips">Survey Tips</a></li>
-            <li><button class="btn-primary" onclick="scrollToSurvey()">Sign In</button></li>
-        </ul>
+        <div class="nav-links">
+            <a href="#how-it-works">How it Works</a>
+            <a href="#tips">Guidelines</a>
+            <button class="btn-primary" style="padding: 0.6rem 1.2rem; border-radius: 10px; border:none; background: var(--primary); color:white; font-weight:600; cursor:pointer;" onclick="scrollToSurvey()">Start Now</button>
+        </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <div class="badge">🔥 Verified Survey Partner</div>
-            <h1 class="animate-text">Earn Up To <span>$10 Daily</span> From Home</h1>
-            <p>Your opinion is valuable. Join 100+ active users earning daily rewards through our premium survey partnership.</p>
-            <div class="stats-mini">
-                <div class="stat-item"><strong>$1,240+</strong> Total Paid</div>
-                <div class="stat-item"><strong>150+</strong> Active Tasks</div>
-            </div>
-            <div class="hero-btns">
-                <button class="btn-main" onclick="scrollToSurvey()">Start Earning Now</button>
-            </div>
-        </div>
-        <div class="hero-visual">
-            <div class="floating-card c1">✓ $2.00 Survey Available</div>
-            <div class="floating-card c2">⚡ Instant Payout</div>
-            <div class="floating-card c3">🛡️ Security Verified</div>
-        </div>
-    </header>
-
-    <section id="survey-portal" class="survey-section">
-        <div class="survey-box">
-            <div class="live-status"><span class="dot"></span> Live Surveys Available</div>
-            <div id="user-ip" class="ip-badge">Detecting IP...</div>
-            <h2>Member Dashboard</h2>
-            <p>Enter your ID to check stats & start tasks.</p>
+    <main>
+        <header class="hero">
+            <div class="badge">💎 Verified Publisher Partner</div>
+            <h1>The New Era of <span>Smart Earnings</span></h1>
+            <p>Join a premium community of earners. Providing high-quality market insights for global brands.</p>
             
-            <div class="input-group">
-                <input type="text" id="workerId" placeholder="Enter Your ID (e.g. Sahil_01)">
-                <div class="btn-group">
-                    <button class="btn-secondary" onclick="checkUserStats()">Check Stats</button>
-                    <button class="btn-go" onclick="launchSurvey()">Launch Survey ➜</button>
-                </div>
+            <div class="stats-mini">
+                <div class="stat-item"><strong>$1,240+</strong> Paid Out</div>
+                <div class="stat-item"><strong>150+</strong> Daily Tasks</div>
+                <div class="stat-item"><strong>🛡️</strong> Secured</div>
             </div>
 
-            <div id="user-stats-container" class="stats-card" style="display: none;">
-                <div class="stats-header">Welcome Back, <span id="display-name">User</span></div>
-                <div class="stats-grid-mini">
-                    <div class="stat-box">
-                        <span class="val" id="total-tasks">0</span>
-                        <span class="lbl">Total Tasks</span>
+            <section id="survey-portal" class="survey-section">
+                <div class="survey-box">
+                    <div class="live-status"><span class="dot"></span> Online</div>
+                    <div id="user-ip" class="ip-badge">IP: Detecting Security...</div>
+                    <h2>Member Dashboard</h2>
+                    <p>Enter your Worker ID to access secure sessions.</p>
+                    
+                    <div class="input-group">
+                        <input type="text" id="workerId" placeholder="Worker ID (e.g. Sahil_01)">
+                        <div class="btn-group">
+                            <button class="btn-secondary" onclick="checkUserStats()">Check History</button>
+                            <button class="btn-go" onclick="launchSurvey()">Launch Task ➜</button>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <span class="val" id="today-tasks">0</span>
-                        <span class="lbl">Today</span>
+
+                    <div id="user-stats-container" class="stats-card" style="display: none;">
+                        <div class="stats-header">Account Activity: <span id="display-name" style="color:var(--primary)">User</span></div>
+                        <div class="stats-grid-mini">
+                            <div class="stat-box">
+                                <span class="val" id="total-tasks">0</span>
+                                <span class="lbl">Total Done</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="val" id="today-tasks">0</span>
+                                <span class="lbl">Today</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="val text-green" id="user-status">Newbie</span>
+                                <span class="lbl">Level</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <span class="val text-green" id="user-status">Newbie</span>
-                        <span class="lbl">Rank</span>
-                    </div>
+
+                    <p class="warning-text" style="color:#fca5a5; font-size: 0.8rem; margin-top: 1.5rem;">⚠️ VPN/Proxy use results in permanent account suspension.</p>
+                </div>
+            </section>
+        </header>
+
+        <section id="tips" class="tips-section">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">Worker Guidelines</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3 style="color:var(--primary); margin-bottom: 1rem;">1. Honest Profile</h3>
+                    <p style="opacity:0.7">Always fill surveys using your registered profile details. Inconsistent data leads to disqualification.</p>
+                </div>
+                <div class="tip-card">
+                    <h3 style="color:var(--primary); margin-bottom: 1rem;">2. High-Speed Net</h3>
+                    <p style="opacity:0.7">Use stable connections. If a survey disconnects, it may not count towards your daily total.</p>
+                </div>
+                <div class="tip-card">
+                    <h3 style="color:var(--primary); margin-bottom: 1rem;">3. Daily Refresh</h3>
+                    <p style="opacity:0.7">New high-paying surveys are uploaded every 4-6 hours. Check back regularly for more tasks.</p>
                 </div>
             </div>
+        </section>
 
-            <p class="warning-text">⚠️ 70 Tasks = ₹2100 Potential Earnings. Be Honest.</p>
-        </div>
-    </section>
-
-    <section class="payouts">
-        <h2>Live Real-Time Payouts</h2>
-        <div class="payout-list" id="payout-list-container">
-            <!-- Dynamic payouts will be injected here -->
-        </div>
-    </section>
+        <section class="payouts">
+            <h2 style="margin-bottom: 2rem;">Recent Live Payouts</h2>
+            <div class="payout-list" id="payout-list-container" style="max-width: 600px; margin: 0 auto;">
+                <!-- Injected via app.js -->
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-logo">NexGen<span>Rewards</span></div>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Support</a>
-            </div>
-            <p>&copy; 2026 NexGen Rewards. Partnered with CPX Research.</p>
-        </div>
+        <p>&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
     </footer>
 
     <script src="app.js"></script>
