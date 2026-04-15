@@ -162,8 +162,9 @@ function proceedToSurvey(workerId) {
         });
     } catch (e) {}
 
-    const appId = "32459"; 
-    const surveyUrl = `https://offers.cpx-research.com/index.php?app_id=${appId}&ext_user_id=${workerId}&username=${workerId}`;
+    // BitLabs Survey URL (Replaced CPX Research)
+    const bitlabsToken = "7SI4aYBbSYiuSzdqSFMCW0ttWIG9rMcu"; 
+    const surveyUrl = `https://web.bitlabs.ai/?token=${bitlabsToken}&uid=${workerId}`;
 
     window.location.href = surveyUrl;
 }
