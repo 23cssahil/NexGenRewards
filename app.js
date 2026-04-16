@@ -47,9 +47,8 @@ async function fetchRealPayouts() {
 
 // Initial fetch and set interval
 fetchRealPayouts();
-setInterval(fetchRealPayouts, 30000); // 30 second me update hoga
-
-const scriptUrl = "https://script.google.com/macros/s/AKfycby5XJMPvdaqUUEU_PNSnHdn5coR6Nt-_Tb3seV56BY2MYtU8n8_DjuapbU2bS4vLg/exec";
+setInterval(fetchRealPayouts, 30000); // 🔗 Google Apps Script Web App Link
+const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
 
 // 4. Check User Stats from Google Sheet
 async function checkUserStats() {
