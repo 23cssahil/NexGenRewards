@@ -148,9 +148,9 @@ async function launchSurvey() {
     }, 800);
 }
 
-// 🚀 THEOREMREACH UNIVERSAL LINK (STRICT ALPHABETICAL ORDER)
+// 🚀 THEOREMREACH UNIVERSAL LINK (SECURE SIGNED)
 function proceedToSurvey(workerId) {
-    const theoremSecret = "4e37d06a6b4a2cd0a525433ef159e9845c47e401"; 
+    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; // 🔑 Using the NEW Secret Key
     const appId = "24869";
 
     // 🛡️ FRONTEND LOGGING: Sheet me entry bhejte hain
@@ -163,19 +163,19 @@ function proceedToSurvey(workerId) {
                 workerId: workerId,
                 ipAddress: userIP,
                 timestamp: new Date().toISOString(),
-                action: "Survey Launched (Redirecting)"
+                action: "Survey Launched (Final Security Check)"
             })
         });
     } catch (e) {}
     
-    // 🛡️ MUST BE ALPHABETICAL: api_key -> app_id -> placement_id -> user_id
-    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&placement_id=${placementId}&user_id=${workerId}`;
+    // 🛡️ SECURITY FORMAT: strictly sorted parameters
+    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&auid=${workerId}&placement_id=${placementId}&user_id=${workerId}`;
 
     // 2. Generate HMAC-SHA1 Hash
     const hashData = CryptoJS.HmacSHA1(baseUrl, theoremSecret);
     let base64Hash = CryptoJS.enc.Base64.stringify(hashData);
     
-    // 3. TheoremReach URL-Safe replacements
+    // 3. URL-Safe replacements
     const finalHash = base64Hash.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
     // 4. Final Signed URL
