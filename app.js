@@ -161,9 +161,9 @@ function proceedToSurvey(workerId) {
         });
     } catch (e) {}
 
-    // TheoremReach Final URL with All IDs
+    // TheoremReach Verified Respondent Entry URL
     const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
-    const surveyUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=24869&auid=${workerId}&user_id=${workerId}`;
+    const surveyUrl = `https://theoremreach.com/respondent/entry?api_key=${theoremApiKey}&user_id=${workerId}`;
 
     window.location.href = surveyUrl;
 }
