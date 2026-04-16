@@ -148,12 +148,12 @@ async function launchSurvey() {
     }, 800);
 }
 
-// 🚀 THEOREMREACH UNIVERSAL LINK (SECURE SIGNED)
+// 🚀 THEOREMREACH UNIVERSAL LINK (SECURE SIGNED - HEX VERSION)
 function proceedToSurvey(workerId) {
-    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; // 🔑 Using the NEW Secret Key
+    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
     const appId = "24869";
 
-    // 🛡️ FRONTEND LOGGING: Sheet me entry bhejte hain
+    // 🛡️ FRONTEND LOGGING
     try {
         fetch(scriptUrl, {
             method: 'POST',
@@ -163,22 +163,18 @@ function proceedToSurvey(workerId) {
                 workerId: workerId,
                 ipAddress: userIP,
                 timestamp: new Date().toISOString(),
-                action: "Survey Launched (Final Security Check)"
+                action: "Survey Launched (HEX Protocol)"
             })
         });
     } catch (e) {}
     
-    // 🛡️ SECURITY FORMAT: strictly sorted parameters
-    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&auid=${workerId}&placement_id=${placementId}&user_id=${workerId}`;
+    // 🛡️ SECURITY FORMAT: Standard Web Entry URL
+    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&user_id=${workerId}`;
 
-    // 2. Generate HMAC-SHA1 Hash
-    const hashData = CryptoJS.HmacSHA1(baseUrl, theoremSecret);
-    let base64Hash = CryptoJS.enc.Base64.stringify(hashData);
-    
-    // 3. URL-Safe replacements
-    const finalHash = base64Hash.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    // 2. Generate HMAC-SHA1 Hash (HEX Version)
+    const finalHash = CryptoJS.HmacSHA1(baseUrl, theoremSecret).toString();
 
-    // 4. Final Signed URL
+    // 3. Final Signed URL
     const surveyUrl = `${baseUrl}&hash=${finalHash}`;
 
     window.location.href = surveyUrl;
