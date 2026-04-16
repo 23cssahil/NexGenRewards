@@ -148,12 +148,11 @@ async function launchSurvey() {
     }, 800);
 }
 
-// 🚀 THEOREMREACH ULTIMATE SIGNED LINK
+// 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
 function proceedToSurvey(workerId) {
     const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
-    const appId = "24869";
 
-    // 🛡️ FRONTEND LOGGING
+    // 🛡️ FRONTEND LOGGING: Web Protocol Activation
     try {
         fetch(scriptUrl, {
             method: 'POST',
@@ -163,19 +162,20 @@ function proceedToSurvey(workerId) {
                 workerId: workerId,
                 ipAddress: userIP,
                 timestamp: new Date().toISOString(),
-                action: "Survey Launched (Ultimate Protocol)"
+                action: "Survey Launched (Web Direct Protocol)"
             })
         });
     } catch (e) {}
     
-    // 🛡️ SECURITY FORMAT: Fully Loaded Parameters
-    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&auid=${workerId}&placement_id=${placementId}&user_id=${workerId}`;
+    // 🛡️ WEB DIRECT ENTRY URL
+    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
 
-    // 2. Generate HMAC-SHA1 Hash (HEX)
-    const finalHash = CryptoJS.HmacSHA1(baseUrl, theoremSecret).toString();
+    // 2. OFFICIAL HASH FORMULA: SHA1(user_id + secret_key)
+    const signatureString = workerId + theoremSecret;
+    const finalSig = CryptoJS.SHA1(signatureString).toString();
 
-    // 3. Final Signed URL
-    const surveyUrl = `${baseUrl}&hash=${finalHash}`;
+    // 3. Final Signed URL (sig parameter is KEY)
+    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
 
     window.location.href = surveyUrl;
 }
