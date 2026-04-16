@@ -162,9 +162,9 @@ function proceedToSurvey(workerId) {
         });
     } catch (e) {}
 
-    // BitLabs Survey URL (Replaced CPX Research)
-    const bitlabsToken = "7SI4aYBbSYiuSzdqSFMCW0ttWIG9rMcu"; 
-    const surveyUrl = `https://web.bitlabs.ai/?token=${bitlabsToken}&uid=${workerId}`;
+    // TheoremReach Survey URL (New Provider)
+    const theoremApiKey = "526e2adc8b283d821a45a4599237"; 
+    const surveyUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&user_id=${workerId}`;
 
     window.location.href = surveyUrl;
 }
