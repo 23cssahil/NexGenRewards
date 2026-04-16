@@ -1,3 +1,8 @@
+// 🔗 Global Configuration
+const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
+const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
+const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
+
 let userIP = "Detecting...";
 
 // 1. Fetch User IP for Security
@@ -47,8 +52,7 @@ async function fetchRealPayouts() {
 
 // Initial fetch and set interval
 fetchRealPayouts();
-setInterval(fetchRealPayouts, 30000); // 🔗 Google Apps Script Web App Link
-const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
+setInterval(fetchRealPayouts, 30000); // 🔗 Sync with Google Sheets
 
 // 4. Check User Stats from Google Sheet
 async function checkUserStats() {
@@ -61,7 +65,7 @@ async function checkUserStats() {
     const btn = document.querySelector('.btn-secondary');
     btn.innerText = "Checking...";
     
-    // 🛡️ SECURITY SHIELD: Check if user is authorized before showing stats
+    // 🛡️ SECURITY SHIELD: Check auth
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
         const authStatus = await authResponse.text();
@@ -88,7 +92,7 @@ async function checkUserStats() {
         
         document.getElementById('user-stats-container').style.display = 'block';
         
-        // 🕒 AUTO-HIDE: Stats will automatically disappear after 10 seconds
+        // 🕒 AUTO-HIDE
         setTimeout(() => {
             document.getElementById('user-stats-container').style.display = 'none';
         }, 10000);
@@ -113,19 +117,19 @@ async function launchSurvey() {
     btn.disabled = true;
     btn.innerHTML = "Authenticating ID...";
 
-    // 🛡️ SECURITY SHIELD: Check if user is authorized
+    // 🛡️ SECURITY SHIELD
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
         const authStatus = await authResponse.text();
 
         if (authStatus !== "AUTHORIZED") {
-            alert("⚠️ UNAUTHORIZED ID: You are not allowed to use this portal. Contact the Administrator.");
+            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
             btn.disabled = false;
             btn.innerHTML = "Launch Survey";
             return;
         }
     } catch (e) {
-        alert("Security Server Offline. Try again later.");
+        alert("Security Server Offline.");
         btn.disabled = false;
         btn.innerHTML = "Launch Survey";
         return;
@@ -149,7 +153,7 @@ function proceedToSurvey(workerId) {
         workerId: workerId,
         ipAddress: userIP,
         timestamp: new Date().toISOString(),
-        action: "Survey Started (Fresh Fetch)"
+        action: "Survey Started"
     };
 
     try {
@@ -161,10 +165,8 @@ function proceedToSurvey(workerId) {
         });
     } catch (e) {}
 
-    // TheoremReach Gold-Standard Web Integration (auid is KEY)
-    const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
-    const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
-    const surveyUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&auid=${workerId}&placement_id=${placementId}`;
+    // 🚀 THEOREMREACH UNIVERSAL LINK
+    const surveyUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&user_id=${workerId}&placement_id=${placementId}`;
 
     window.location.href = surveyUrl;
 }
