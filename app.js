@@ -148,7 +148,7 @@ async function launchSurvey() {
     }, 800);
 }
 
-// 🚀 THEOREMREACH UNIVERSAL LINK (SECURE SIGNED - HEX VERSION)
+// 🚀 THEOREMREACH ULTIMATE SIGNED LINK
 function proceedToSurvey(workerId) {
     const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
     const appId = "24869";
@@ -163,15 +163,15 @@ function proceedToSurvey(workerId) {
                 workerId: workerId,
                 ipAddress: userIP,
                 timestamp: new Date().toISOString(),
-                action: "Survey Launched (HEX Protocol)"
+                action: "Survey Launched (Ultimate Protocol)"
             })
         });
     } catch (e) {}
     
-    // 🛡️ SECURITY FORMAT: Standard Web Entry URL
-    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&user_id=${workerId}`;
+    // 🛡️ SECURITY FORMAT: Fully Loaded Parameters
+    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&auid=${workerId}&placement_id=${placementId}&user_id=${workerId}`;
 
-    // 2. Generate HMAC-SHA1 Hash (HEX Version)
+    // 2. Generate HMAC-SHA1 Hash (HEX)
     const finalHash = CryptoJS.HmacSHA1(baseUrl, theoremSecret).toString();
 
     // 3. Final Signed URL
