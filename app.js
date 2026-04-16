@@ -161,10 +161,9 @@ function proceedToSurvey(workerId) {
         });
     } catch (e) {}
 
-    // TheoremReach Final URL with Placement ID
+    // TheoremReach Final URL with All IDs
     const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
-    const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
-    const surveyUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&user_id=${workerId}&placement_id=${placementId}`;
+    const surveyUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=24869&auid=${workerId}&user_id=${workerId}`;
 
     window.location.href = surveyUrl;
 }
