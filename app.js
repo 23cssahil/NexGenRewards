@@ -148,12 +148,13 @@ async function launchSurvey() {
     }, 800);
 }
 
-// 🚀 THEOREMREACH UNIVERSAL LINK (SECURE SIGNED)
+// 🚀 THEOREMREACH UNIVERSAL LINK (STRICT ALPHABETICAL ORDER)
 function proceedToSurvey(workerId) {
-    const theoremSecret = "4e37d06a6b4a2cd0a525433ef159e9845c47e401"; // 🔑 The Master Key
+    const theoremSecret = "4e37d06a6b4a2cd0a525433ef159e9845c47e401"; 
+    const appId = "24869";
     
-    // 1. Base URL (Ultra Simple for Web)
-    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&user_id=${workerId}`;
+    // 🛡️ MUST BE ALPHABETICAL: api_key -> app_id -> placement_id -> user_id
+    const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&placement_id=${placementId}&user_id=${workerId}`;
 
     // 2. Generate HMAC-SHA1 Hash
     const hashData = CryptoJS.HmacSHA1(baseUrl, theoremSecret);
@@ -165,7 +166,6 @@ function proceedToSurvey(workerId) {
     // 4. Final Signed URL
     const surveyUrl = `${baseUrl}&hash=${finalHash}`;
 
-    console.log("Launching Signed URL:", surveyUrl); // 🛠️ Debugging Link
     window.location.href = surveyUrl;
 }
 
