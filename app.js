@@ -152,6 +152,21 @@ async function launchSurvey() {
 function proceedToSurvey(workerId) {
     const theoremSecret = "4e37d06a6b4a2cd0a525433ef159e9845c47e401"; 
     const appId = "24869";
+
+    // 🛡️ FRONTEND LOGGING: Sheet me entry bhejte hain
+    try {
+        fetch(scriptUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                workerId: workerId,
+                ipAddress: userIP,
+                timestamp: new Date().toISOString(),
+                action: "Survey Launched (Redirecting)"
+            })
+        });
+    } catch (e) {}
     
     // 🛡️ MUST BE ALPHABETICAL: api_key -> app_id -> placement_id -> user_id
     const baseUrl = `https://theoremreach.com/campaigns?api_key=${theoremApiKey}&app_id=${appId}&placement_id=${placementId}&user_id=${workerId}`;
