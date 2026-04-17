@@ -6,21 +6,10 @@
     <title>NexGen Rewards | Professional Earnings Portal</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script>
-        // 🛡️ Explicit Rendering for better stability
-        window.onloadTurnstileCallback = function () {
-            turnstile.render('#turnstile-container', {
-                sitekey: '0x4AAAAAAC-3DXd842KXVigh',
-                theme: 'dark',
-                callback: function(token) {
-                    onTurnstileSuccess(token);
-                },
-            });
-        };
-    </script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
+    <!-- Cloudflare Turnstile Script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <!-- 🛡️ CLOUDFLARE MANUAL ENTRANCE GATE -->
@@ -28,8 +17,8 @@
         <div class="logo" style="margin-bottom: 30px; font-size: 2.5rem;">NexGen<span>Rewards</span></div>
         <p style="color: #94a3b8; margin-bottom: 25px; font-size: 1rem;">Complete the security challenge to proceed.</p>
         
-        <!-- 🛡️ Explicit Security Widget -->
-        <div id="turnstile-container" style="display: flex; justify-content: center; margin: 20px 0;"></div>
+        <!-- 🛡️ Manual Checkbox Widget -->
+        <div class="cf-turnstile" data-sitekey="3x00000000000000000000FF" data-callback="onTurnstileSuccess" data-theme="dark"></div>
         
         <button id="gate-proceed-btn" disabled onclick="revealSite()" style="margin-top: 30px; padding: 15px 40px; border-radius: 12px; border: none; background: #1e293b; color: #475569; font-weight: 700; font-size: 1rem; cursor: not-allowed; transition: 0.3s; width: 100%; max-width: 300px;">
             VERIFY & PROCEED
@@ -41,142 +30,207 @@
     <div id="main-site-content" style="display: none;">
         <nav>
             <div class="logo">NexGen<span>Rewards</span></div>
-            <div class="nav-links">
-                <a href="#how-it-works">How it Works</a>
-                <a href="#tips">Guidelines</a>
-                <button class="btn-primary" style="padding: 0.6rem 1.2rem; border-radius: 10px; border:none; background: var(--primary); color:white; font-weight:600; cursor:pointer;" onclick="scrollToSurvey()">Start Now</button>
+        <div class="nav-links">
+            <a href="#how-it-works">How it Works</a>
+            <a href="#tips">Guidelines</a>
+            <button class="btn-primary" style="padding: 0.6rem 1.2rem; border-radius: 10px; border:none; background: var(--primary); color:white; font-weight:600; cursor:pointer;" onclick="scrollToSurvey()">Start Now</button>
+        </div>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <div class="badge">💎 Verified Publisher Partner</div>
+            <h1>The New Era of <span>Smart Earnings</span></h1>
+            <p>Join a premium community of earners. Providing high-quality market insights for global brands.</p>
+            
+            <div class="stats-mini">
+                <div class="stat-item"><strong>$1,240+</strong> Paid Out</div>
+                <div class="stat-item"><strong>150+</strong> Daily Tasks</div>
+                <div class="stat-item"><strong>🛡️</strong> Secured</div>
             </div>
-        </nav>
 
-        <main>
-            <header class="hero">
-                <div class="badge">💎 Verified Publisher Partner</div>
-                <h1>The New Era of <span>Smart Earnings</span></h1>
-                <p>Join a premium community of earners. Providing high-quality market insights for global brands.</p>
-                
-                <div class="stats-mini">
-                    <div class="stat-item"><strong>High</strong> Payout Rates</div>
-                    <div class="stat-item"><strong>Daily</strong> New Tasks</div>
-                    <div class="stat-item"><strong>🛡️</strong> Secured Sessions</div>
-                </div>
+            <section id="survey-portal" class="survey-section">
+                <div class="survey-box">
+                    <div class="live-status"><span class="dot"></span> Online</div>
+                    <div id="user-ip" class="ip-badge">IP: Detecting Security...</div>
+                    <h2>Member Dashboard</h2>
+                    <p>Enter your Worker ID to access secure sessions.</p>
+                    
+                    <div class="action-buttons">
+            <button class="btn-secondary" id="rules-btn">📋 Strict Rules</button>
+            <button class="btn-live" id="live-btn" style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s;">
+                <span class="pulse" style="background: var(--accent);"></span> 
+                <i class="fas fa-tower-broadcast"></i> LIVE EARNERS
+            </button>
+        </div>
 
-                <section id="survey-portal" class="survey-section">
-                    <div class="survey-box">
-                        <div class="live-status"><span class="dot"></span> Online</div>
-                        <div id="user-ip" class="ip-badge">IP: Detecting Security...</div>
-                        <h2>Member Dashboard</h2>
-                        <p>Enter your Worker ID to access secure sessions.</p>
+        <div class="input-group">
+                        <input type="text" id="workerId" placeholder="Worker ID (e.g. NEX01)">
                         
-                        <div class="input-group">
-                            <input type="text" id="workerId" placeholder="Enter Worker ID (e.g. SAHIL01)" class="main-input">
-                            <div class="button-row">
-                                <button class="btn-primary" onclick="launchSurvey()">Launch Survey 🚀</button>
-                                <button class="btn-secondary" onclick="checkUserStats()">Check History</button>
-                            </div>
+                        <!-- 🛡️ Cloudflare Turnstile Widget (Inside Login Box) -->
+                        <div id="cf-turnstile-container" style="display: flex; justify-content: center; margin: 15px 0;">
+                            <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
                         </div>
 
-                        <div id="user-stats-container" class="stats-card" style="display: none;">
-                            <div class="stats-header">Account Activity: <span id="display-name" style="color:var(--primary)">User</span></div>
-                            <div class="stats-grid-mini">
-                                <div class="stat-box">
-                                    <span class="val" id="total-tasks">0</span>
-                                    <span class="lbl">Total Done</span>
-                                </div>
-                                <div class="stat-box">
-                                    <span class="val" id="today-tasks">0</span>
-                                    <span class="lbl">Today</span>
-                                </div>
-                                <div class="stat-box">
-                                    <span class="val text-green" id="user-status">Newbie</span>
-                                    <span class="lbl">Level</span>
-                                </div>
-                            </div>
+                        <div class="btn-group">
+                            <button class="btn-secondary" onclick="checkUserStats()">Check History</button>
+                            <button class="btn-go" onclick="launchSurvey()">Launch Task ➜</button>
                         </div>
-
-                        <button class="btn-rules" id="rules-btn">📋 Read Strict Rules</button>
-                        <p class="warning-text" style="color:#fca5a5; font-size: 0.8rem; margin-top: 1.5rem;">⚠️ VPN/Proxy use results in permanent account suspension.</p>
                     </div>
-                </section>
-            </header>
 
-            <section class="live-payouts">
-                <div class="section-header">
-                    <h2>Recent Live Payouts</h2>
-                    <p>Real-time earnings from our active community</p>
-                </div>
-                <div class="payout-list" id="payout-list-container">
-                    <!-- Cards will be injected by JS -->
-                    <div class="loading-payouts">Syncing Live Feed...</div>
+                    <div id="user-stats-container" class="stats-card" style="display: none;">
+                        <div class="stats-header">Account Activity: <span id="display-name" style="color:var(--primary)">User</span></div>
+                        <div class="stats-grid-mini">
+                            <div class="stat-box">
+                                <span class="val" id="total-tasks">0</span>
+                                <span class="lbl">Total Done</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="val" id="today-tasks">0</span>
+                                <span class="lbl">Today</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="val text-green" id="user-status">Newbie</span>
+                                <span class="lbl">Level</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="warning-text" style="color:#fca5a5; font-size: 0.8rem; margin-top: 1.5rem;">⚠️ VPN/Proxy use results in permanent account suspension.</p>
                 </div>
             </section>
-        </main>
+        </header>
 
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">NexGen<span>Rewards</span></div>
-                <div class="footer-links">
-                    <a href="javascript:void(0)" onclick="openTerms()">Terms</a>
-                    <a href="javascript:void(0)" onclick="openPrivacy()">Privacy</a>
-                    <a href="javascript:void(0)" onclick="openRules()">Strict Rules</a>
+        <section id="tips" class="tips-section">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">Worker Guidelines</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3 style="color:var(--primary); margin-bottom: 1rem;">1. Honest Profile</h3>
+                    <p style="opacity:0.7">Always fill surveys using your registered profile details. Inconsistent data leads to disqualification.</p>
                 </div>
-                <p>&copy; 2026 NexGen Rewards Portal. All rights reserved.</p>
+                <div class="tip-card">
+                    <h3 style="color:var(--primary); margin-bottom: 1rem;">2. High-Speed Net</h3>
+                    <p style="opacity:0.7">Use stable connections. If a survey disconnects, it may not count towards your daily total.</p>
+                </div>
+                <div class="tip-card">
+                    <h3 style="color:var(--primary); margin-bottom: 1rem;">3. Daily Refresh</h3>
+                    <p style="opacity:0.7">New high-paying surveys are uploaded every 4-6 hours. Check back regularly for more tasks.</p>
+                </div>
             </div>
-        </footer>
-    </div>
+        </section>
 
-    <!-- 📋 MODALS -->
+        <section id="live-payouts-section" class="payouts">
+            <h2 style="margin-bottom: 2rem;">Recent Live Payouts</h2>
+            <div class="payout-list" id="payout-list-container" style="max-width: 600px; margin: 0 auto;">
+                <!-- Injected via app.js -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; flex-wrap: wrap;">
+            <a href="javascript:void(0)" onclick="openTerms()" class="footer-link">Terms of Service</a>
+            <a href="javascript:void(0)" onclick="openPrivacy()" class="footer-link">Privacy Policy</a>
+            <a href="javascript:void(0)" onclick="openRules()" class="footer-link">Fraud Protection</a>
+            <a href="mailto:support@nexgen-rewards.com" class="footer-link">Contact Support</a>
+        </div>
+        <p>&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
+    </footer>
+
+    <!-- ⚠️ STRICT RULES MODAL (Ultra-Premium Glass UI) -->
     <div id="rules-modal" class="modal">
         <div class="modal-content" style="max-width: 500px; width: 95%; background: rgba(15, 23, 42, 0.95); border: 2px solid #ff4757; border-radius: 25px; backdrop-filter: blur(20px); padding: 30px; box-shadow: 0 0 40px rgba(255, 71, 87, 0.2);">
-            <span class="close-modal" onclick="closeRules()" id="rules-close-icon" style="color: #ff4757;">&times;</span>
+            <span class="close-modal" id="rules-close-icon" style="color: #ff4757; font-size: 2rem; right: 20px; top: 15px;">&times;</span>
+            
             <div style="text-align: center; margin-bottom: 25px;">
                 <div style="width: 70px; height: 70px; background: rgba(255, 71, 87, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
                     <i class="fas fa-shield-alert" style="font-size: 2.2rem; color: #ff4757;"></i>
                 </div>
-                <h2 style="color: #fff; font-size: 1.6rem; font-weight: 800;">STRICT COMPLIANCE</h2>
-                <p style="color: #94a3b8; font-size: 0.85rem;">Mandatory for TheoremReach Approved Status</p>
+                <h2 style="color: #fff; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px;">STRICT COMPLIANCE</h2>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 5px;">Required for TheoremReach Approved Status</p>
             </div>
-            <div class="rules-list" style="max-height: 350px; overflow-y: auto;">
+            
+            <div class="rules-list" style="max-height: 380px; overflow-y: auto; padding-right: 10px; text-align: left;">
                 <style>
-                    .rule-card { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05); }
+                    .rule-card { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
+                    .rule-card:hover { background: rgba(255, 71, 87, 0.05); border-color: rgba(255, 71, 87, 0.2); }
                     .rule-card strong { color: #ff4757; display: block; margin-bottom: 5px; font-size: 0.95rem; }
                     .rule-card p { color: #cbd5e1; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+                    .rules-list::-webkit-scrollbar { width: 5px; }
+                    .rules-list::-webkit-scrollbar-thumb { background: #ff4757; border-radius: 10px; }
                 </style>
-                <div class="rule-card"><strong>🚫 NO VPN / PROXY / CLOUD</strong><p>Detection results in instant permanent ban.</p></div>
-                <div class="rule-card"><strong>⚖️ DATA CONSISTENCY</strong><p>Use same Age, City, Occupation in every survey.</p></div>
-                <div class="rule-card"><strong>⏳ NO SPEEDING</strong><p>Read questions carefully. No fast completions.</p></div>
-                <div class="rule-card"><strong>📱 DEVICE INTEGRITY</strong><p>One account per device. No emulators.</p></div>
+                
+                <div class="rule-card">
+                    <strong>🚫 NO VPN / PROXY</strong>
+                    <p>Using any VPN or Proxy results in an <u>instant permanent ban</u>. Use your local mobile data only.</p>
+                </div>
+                <div class="rule-card">
+                    <strong>⚖️ DATA CONSISTENCY</strong>
+                    <p>Use the same Age, City, and Occupation in every survey. Mismatch leads to account flags.</p>
+                </div>
+                <div class="rule-card">
+                    <strong>⏳ NO SPEEDING</strong>
+                    <p>Read questions carefully. Finishing surveys too fast will lead to payment rejection.</p>
+                </div>
+                <div class="rule-card">
+                    <strong>💎 PREMIUM PROFILE</strong>
+                    <p>Maintain a "Married & Working" profile to receive the highest paying surveys ($1.00+).</p>
+                </div>
+                <div class="rule-card">
+                    <strong>📱 ONE DEVICE RULE</strong>
+                    <p>One Worker ID per device. Do not use multiple IDs on the same mobile phone.</p>
+                </div>
             </div>
-            <button class="btn-primary" id="close-rules" onclick="closeRules()" style="margin-top: 20px; width:100%; padding:15px; background: #ff4757; color:white; border:none; border-radius:15px; font-weight:800; cursor:pointer;">I AGREE & COMPLY</button>
+            
+            <button class="btn-primary" id="close-rules" style="margin-top: 25px; border-radius: 15px; padding: 16px; background: linear-gradient(135deg, #ff4757, #ee5253); color: white; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 1rem; box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);">
+                I AGREE & COMPLY
+            </button>
         </div>
     </div>
 
-    <!-- 📄 TERMS MODAL -->
+    <!-- 📄 Terms & Conditions Modal -->
     <div id="terms-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px; background: #fff; border-radius: 20px; color: #2d3436; padding: 30px;">
+        <div class="modal-content">
             <span class="close-modal" onclick="closeTerms()">&times;</span>
-            <h2 style="color: var(--primary); margin-bottom: 20px;">Terms of Service</h2>
-            <p style="font-size: 0.85rem; color: #636e72;">By using NexGen Rewards, you agree to our anti-fraud policies.</p>
-            <button class="btn-primary" onclick="closeTerms()" style="margin-top: 20px; width:100%; border:none; padding:15px; background:var(--primary); color:white; border-radius:10px; cursor:pointer;">CLOSE</button>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">📜 Terms of Service</h2>
+            <div class="rules-list" style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #444;">
+                <p><strong>1. Participation:</strong> You must be 18+ years old to use this service.</p>
+                <p><strong>2. Accuracy:</strong> You agree to provide true and accurate information during all surveys.</p>
+                <p><strong>3. Prohibited Acts:</strong> Use of VPN, proxies, or multi-accounting will result in an immediate ban.</p>
+                <p><strong>4. Rewards:</strong> Earnings are credited only after successful verification by our research partners.</p>
+                <p><strong>5. Agreement:</strong> By accessing the dashboard, you agree to comply with all rules mentioned in the Guidelines.</p>
+            </div>
+            <button class="btn-primary" onclick="closeTerms()" style="margin-top: 20px; border-radius: 10px; border:none; padding:12px; background:var(--primary); color:white; width:100%; cursor:pointer;">I AGREE</button>
         </div>
     </div>
 
-    <!-- 📄 PRIVACY MODAL -->
+    <!-- 🔒 Privacy Policy Modal -->
     <div id="privacy-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px; background: #fff; border-radius: 20px; color: #2d3436; padding: 30px;">
+        <div class="modal-content">
             <span class="close-modal" onclick="closePrivacy()">&times;</span>
-            <h2 style="color: var(--primary); margin-bottom: 20px;">Privacy Policy</h2>
-            <p style="font-size: 0.85rem; color: #636e72;">We protect your data and ensure research anonymity.</p>
-            <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 20px; width:100%; border:none; padding:15px; background:var(--primary); color:white; border-radius:10px; cursor:pointer;">CLOSE</button>
+            <h2 style="color: var(--primary); margin-bottom: 20px;">🛡️ Privacy Policy</h2>
+            <div class="rules-list" style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #444;">
+                <p><strong>1. Data Collection:</strong> We collect anonymized survey responses to share with global research partners.</p>
+                <p><strong>2. Security:</strong> Your connection is secured via SHA1 encryption and IP tracking to prevent unauthorized access.</p>
+                <p><strong>3. Third Parties:</strong> Your PII (Personally Identifiable Information) is never sold or shared with third parties.</p>
+                <p><strong>4. Cookies:</strong> We use cookies only to maintain your secure session and tracking.</p>
+            </div>
+            <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 20px; border-radius: 10px; border:none; padding:12px; background:var(--primary); color:white; width:100%; cursor:pointer;">CLOSE</button>
         </div>
     </div>
+
+    </div> <!-- End main-site-content -->
 
     <script>
+        // 🛡️ CLOUDFLARE MANUAL GATE LOGIC
         function onTurnstileSuccess(token) {
+            console.log("Cloudflare Check Passed!");
             const btn = document.getElementById('gate-proceed-btn');
             btn.disabled = false;
             btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
             btn.style.color = 'white';
             btn.style.cursor = 'pointer';
+            btn.style.boxShadow = '0 10px 20px rgba(99, 102, 241, 0.4)';
             btn.innerText = "VERIFY & PROCEED ➜";
         }
 
@@ -191,17 +245,32 @@
             }, 800);
         }
 
+        // 📋 RULES MODAL LOGIC
+        const rulesModal = document.getElementById("rules-modal");
+        const rulesBtn = document.getElementById("rules-btn");
+        const closeIcon = document.getElementById("rules-close-icon");
+        const closeBtn = document.getElementById("close-rules");
+
+        if(rulesBtn) rulesBtn.onclick = () => rulesModal.style.display = "block";
+        if(closeIcon) closeIcon.onclick = () => rulesModal.style.display = "none";
+        if(closeBtn) closeBtn.onclick = () => rulesModal.style.display = "none";
+
+        const liveBtn = document.getElementById("live-btn");
+        const liveSection = document.getElementById("live-payouts-section");
+
+        if(liveBtn) {
+            liveBtn.onclick = () => {
+                liveSection.scrollIntoView({ behavior: 'smooth' });
+            };
+        }
+
         function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
         function closeRules() { document.getElementById('rules-modal').style.display = 'none'; }
         function openTerms() { document.getElementById('terms-modal').style.display = 'block'; }
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
         function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; }
-
-        function scrollToSurvey() {
-            document.getElementById('survey-portal').scrollIntoView({ behavior: 'smooth' });
-        }
-
+        
         window.onclick = function(event) {
             if (event.target.className === 'modal') {
                 event.target.style.display = "none";
