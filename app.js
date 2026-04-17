@@ -107,9 +107,15 @@ async function checkUserStats() {
 // 5. Launch Survey Logic (Always Fresh Surveys)
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
-    
+    const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
+
     if (!workerId || workerId.length < 3) {
         alert("Enter a valid Worker ID.");
+        return;
+    }
+
+    if (!turnstileResponse) {
+        alert("🤖 SECURITY CHECK: Please verify you are not a robot (Cloudflare Check).");
         return;
     }
 

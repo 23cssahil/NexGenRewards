@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Cloudflare Turnstile Script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="cursor-glow"></div>
@@ -46,7 +48,13 @@
         </div>
 
         <div class="input-group">
-                        <input type="text" id="workerId" placeholder="Worker ID (e.g. Sahil_01)">
+                        <input type="text" id="workerId" placeholder="Worker ID (e.g. NEX01)">
+                        
+                        <!-- 🛡️ Cloudflare Turnstile Widget (Inside Login Box) -->
+                        <div id="cf-turnstile-container" style="display: flex; justify-content: center; margin: 15px 0;">
+                            <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+                        </div>
+
                         <div class="btn-group">
                             <button class="btn-secondary" onclick="checkUserStats()">Check History</button>
                             <button class="btn-go" onclick="launchSurvey()">Launch Task ➜</button>
