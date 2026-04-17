@@ -90,33 +90,6 @@ async function fetchRealPayouts() {
 setInterval(fetchRealPayouts, 20000);
 
 // 🛡️ 3. Check User Stats from Google Sheet
-async function checkTheoremAvailability(workerId) {
-    const badge = document.getElementById('survey-availability-badge');
-    const text = document.getElementById('availability-text');
-    if(!badge || !text) return;
-
-    text.innerText = "Checking Surveys...";
-    
-    try {
-        const response = await fetch(`https://api.theoremreach.com/api/publishers/v1/user_details?api_key=${theoremApiKey}&user_id=${workerId}&ip=${userIP}`);
-        const data = await response.json();
-        
-        if(data.surveys_available) {
-            badge.style.background = "rgba(16, 185, 129, 0.1)";
-            badge.style.borderColor = "rgba(16, 185, 129, 0.3)";
-            badge.style.color = "#10b981";
-            text.innerHTML = "Surveys Found: <b>YES ✅</b>";
-        } else {
-            text.innerText = "No New Surveys (Check Later)";
-            badge.style.color = "#94a3b8";
-        }
-    } catch (e) {
-        // Fallback if CORS blocks or API fails
-        text.innerText = "Survey Session: ACTIVE 🛡️";
-        badge.style.color = "#6366f1";
-    }
-}
-
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -124,10 +97,7 @@ async function checkUserStats() {
         return;
     }
 
-    // 🚀 Trigger Smart Availability Check
-    checkTheoremAvailability(workerId);
-
-    const btn = document.getElementById('history-btn-main');
+    const btn = document.querySelector('.btn-secondary');
     if(btn) btn.innerText = "Checking...";
     
     try {
