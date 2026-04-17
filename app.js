@@ -48,7 +48,10 @@ async function fetchRealPayouts() {
         }
 
         container.innerHTML = '';
-        payouts.forEach(p => {
+        // 🛡️ Limit to Top 6 Newest Earners
+        const latestPayouts = payouts.reverse().slice(0, 6);
+        
+        latestPayouts.forEach(p => {
             // 🛡️ Data Safety: Convert to String to avoid crashes
             const wId = String(p.workerId || "User");
             const amt = String(p.amount || "0.00");
