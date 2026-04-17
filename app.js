@@ -78,7 +78,7 @@ async function fetchRealPayouts() {
                         <div style="font-size: 0.7rem; color: #94a3b8;">${timeStr}</div>
                     </div>
                 </div>
-                <div class="payout-amount">+$${amt.replace('$', '')}</div>
+                <div class="payout-amount">+$${amount.replace('$', '')}</div>
             `;
             container.appendChild(div);
         });
