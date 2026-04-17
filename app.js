@@ -42,7 +42,8 @@ async function fetchRealPayouts() {
         const latestPayouts = payouts.slice(0, 6);
         
         latestPayouts.forEach(p => {
-            const wId = String(p.workerId || "User");
+            const rawId = String(p.workerId || "User");
+            const wId = rawId.startsWith("GUEST") ? "GUEST" : rawId;
             const amt = String(p.amount || "0.00");
             const timeStr = p.time ? "Recently" : "Just now";
             
