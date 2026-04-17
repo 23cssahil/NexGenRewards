@@ -48,8 +48,8 @@ async function fetchRealPayouts() {
         }
 
         container.innerHTML = '';
-        // 🛡️ Limit to Top 6 Newest Earners
-        const latestPayouts = payouts.reverse().slice(0, 6);
+        // 🛡️ Show 6 Most Recent (Newest) Earners
+        const latestPayouts = payouts.slice(0, 6);
         
         latestPayouts.forEach(p => {
             // 🛡️ Data Safety: Convert to String to avoid crashes
