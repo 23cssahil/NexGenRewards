@@ -8,17 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <!-- Cloudflare Turnstile Script -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-</head>
-<body>
-    <!-- 🛡️ CLOUDFLARE MANUAL ENTRANCE GATE -->
-    <div id="cf-gate" style="position: fixed; inset: 0; background: #070b14; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px;">
-        <div class="logo" style="margin-bottom: 30px; font-size: 2.5rem;">NexGen<span>Rewards</span></div>
-        <p style="color: #94a3b8; margin-bottom: 25px; font-size: 1rem;">Complete the security challenge to proceed.</p>
+        <!-- 🛡️ Explicit Security Widget -->
+        <div id="turnstile-container" style="display: flex; justify-content: center; margin: 20px 0;"></div>
         
-        <!-- 🛡️ Manual Checkbox Widget -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC-3DXd842KXVigh" data-callback="onTurnstileSuccess" data-theme="dark" data-response-field-name="cf-turnstile-response"></div>
+        <script>
+            // 🛡️ Explicit Rendering for better stability
+            window.onloadTurnstileCallback = function () {
+                turnstile.render('#turnstile-container', {
+                    sitekey: '0x4AAAAAAC-3DXd842KXVigh',
+                    theme: 'dark',
+                    callback: function(token) {
+                        onTurnstileSuccess(token);
+                    },
+                });
+            };
+        </script>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
         
         <button id="gate-proceed-btn" disabled onclick="revealSite()" style="margin-top: 30px; padding: 15px 40px; border-radius: 12px; border: none; background: #1e293b; color: #475569; font-weight: 700; font-size: 1rem; cursor: not-allowed; transition: 0.3s; width: 100%; max-width: 300px;">
             VERIFY & PROCEED
