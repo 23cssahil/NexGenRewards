@@ -88,36 +88,40 @@ async function checkUserStats() {
         return;
     }
 
-    const btn = document.querySelector('.btn-secondary');
-    btn.innerText = "Checking...";
+    // 🎯 Target the CORRECT button
+    const btn = document.querySelector('.input-group .btn-secondary');
+    if(btn) btn.innerText = "Checking...";
     
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
-        const authStatus = await authResponse.text();
+        const authStatus = (await authResponse.text()).trim().toUpperCase();
 
         if (authStatus !== "AUTHORIZED") {
-            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
-            btn.innerText = "Check History";
+            alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
+            if(btn) btn.innerText = "Check History";
             return;
         }
         
         const response = await fetch(`${scriptUrl}?workerId=${workerId}`);
         const stats = await response.json();
         
-        document.getElementById('display-name').innerText = workerId;
-        document.getElementById('total-tasks').innerText = stats.totalTasks;
-        document.getElementById('today-tasks').innerText = stats.todayTasks;
-        document.getElementById('user-status').innerText = stats.status;
-        document.getElementById('user-stats-container').style.display = 'block';
-        
-        setTimeout(() => {
-            document.getElementById('user-stats-container').style.display = 'none';
-        }, 10000);
+        if(stats) {
+            document.getElementById('display-name').innerText = workerId;
+            document.getElementById('total-tasks').innerText = stats.totalTasks || 0;
+            document.getElementById('today-tasks').innerText = stats.todayTasks || 0;
+            document.getElementById('user-status').innerText = stats.status || "Active";
+            
+            document.getElementById('user-stats-container').style.display = 'block';
+            
+            // 🕒 Auto-scroll to show stats
+            document.getElementById('user-stats-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
 
     } catch (e) {
-        alert("Could not fetch stats.");
+        console.error("Stats Error:", e);
+        alert("System Busy: Could not fetch your history. Please try again.");
     } finally {
-        btn.innerText = "Check History";
+        if(btn) btn.innerText = "Check History";
     }
 }
 
