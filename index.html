@@ -20,11 +20,9 @@
                 <h1>NexGen Security</h1>
             </div>
             <p>Verification required to access the Rewards Portal.</p>
-            
             <div class="cf-turnstile-container">
                 <div class="cf-turnstile" data-sitekey="3x00000000000000000000FF" data-callback="onTurnstileSuccess"></div>
             </div>
-
             <button id="gate-proceed-btn" class="btn-gate" disabled onclick="revealSite()">
                 COMPLETING CHECK...
             </button>
@@ -32,7 +30,7 @@
         </div>
     </div>
 
-    <!-- 🌐 MAIN SITE CONTENT (Hidden by Default) -->
+    <!-- 🌐 MAIN SITE CONTENT -->
     <div id="main-site-content" style="display: none;">
         <header>
             <nav class="navbar">
@@ -45,7 +43,7 @@
             <section class="hero">
                 <div class="badge">PRO VERSION v2.4</div>
                 <h1>Earn <span>Premium Rewards</span> with Every Survey</h1>
-                <p>Authorized access for TheoremReach high-payout tasks. Your ID is your key to serious earnings.</p>
+                <p>Authorized access for TheoremReach high-payout tasks.</p>
                 
                 <div class="dashboard-preview">
                     <div class="dashboard-card">
@@ -92,9 +90,7 @@
 
             <section id="live-payouts-section" class="payouts">
                 <h2 style="margin-bottom: 2rem;">Recent Live Payouts</h2>
-                <div class="payout-list" id="payout-list-container" style="max-width: 600px; margin: 0 auto;">
-                    <!-- Injected via app.js -->
-                </div>
+                <div class="payout-list" id="payout-list-container" style="max-width: 600px; margin: 0 auto;"></div>
             </section>
         </main>
 
@@ -109,8 +105,6 @@
         </footer>
     </div>
 
-    <!-- 📄 MODALS AREA -->
-
     <!-- 📋 RULES MODAL -->
     <div id="rules-modal" class="modal">
         <div class="modal-content" style="max-width: 500px; width: 95%; background: rgba(15, 23, 42, 0.95); border: 2px solid #ff4757; border-radius: 25px; backdrop-filter: blur(20px); padding: 30px; box-shadow: 0 0 40px rgba(255, 71, 87, 0.2);">
@@ -120,7 +114,7 @@
                     <i class="fas fa-shield-alert" style="font-size: 2.2rem; color: #ff4757;"></i>
                 </div>
                 <h2 style="color: #fff; font-size: 1.6rem; font-weight: 800;">STRICT COMPLIANCE</h2>
-                <p style="color: #94a3b8; font-size: 0.85rem;">Required for TheoremReach Approved Status</p>
+                <p style="color: #94a3b8; font-size: 0.85rem;">Required for TheoremReach Approval</p>
             </div>
             <div class="rules-list" style="max-height: 350px; overflow-y: auto;">
                 <style>
@@ -128,9 +122,9 @@
                     .rule-card strong { color: #ff4757; display: block; margin-bottom: 5px; font-size: 0.95rem; }
                     .rule-card p { color: #cbd5e1; font-size: 0.85rem; line-height: 1.5; margin: 0; }
                 </style>
-                <div class="rule-card"><strong>🚫 NO VPN / PROXY</strong><p>Using any VPN results in an instant permanent ban.</p></div>
-                <div class="rule-card"><strong>⚖️ DATA CONSISTENCY</strong><p>Use same Age, City, and Occupation in every survey.</p></div>
-                <div class="rule-card"><strong>⏳ NO SPEEDING</strong><p>Read questions carefully. No fast completions.</p></div>
+                <div class="rule-card"><strong>🚫 NO VPN / PROXY</strong><p>VPN use results in permanent suspension.</p></div>
+                <div class="rule-card"><strong>⚖️ DATA CONSISTENCY</strong><p>Use same Age, City, Occupation every time.</p></div>
+                <div class="rule-card"><strong>⏳ NO SPEEDING</strong><p>Read carefully. No fast completions.</p></div>
             </div>
             <button class="btn-primary" onclick="closeRules()" style="margin-top: 20px; width:100%; padding:15px; background: #ff4757; color:white; border:none; border-radius:15px; font-weight:800; cursor:pointer;">I AGREE</button>
         </div>
@@ -141,7 +135,7 @@
         <div class="modal-content" style="max-width: 500px; background: #fff; border-radius: 20px; color: #2d3436; padding: 30px;">
             <span class="close-modal" onclick="closeTerms()">&times;</span>
             <h2 style="color: var(--primary); margin-bottom: 20px;">Terms of Service</h2>
-            <p style="font-size: 0.85rem; color: #636e72;">By using NexGen Rewards, you agree to our anti-fraud policies and payment terms.</p>
+            <p style="font-size: 0.85rem; color: #636e72;">Agreement for anti-fraud policies.</p>
             <button class="btn-primary" onclick="closeTerms()" style="margin-top: 20px; width:100%; border:none; padding:15px; background:var(--primary); color:white; border-radius:10px; cursor:pointer;">CLOSE</button>
         </div>
     </div>
@@ -151,13 +145,12 @@
         <div class="modal-content" style="max-width: 500px; background: #fff; border-radius: 20px; color: #2d3436; padding: 30px;">
             <span class="close-modal" onclick="closePrivacy()">&times;</span>
             <h2 style="color: var(--primary); margin-bottom: 20px;">Privacy Policy</h2>
-            <p style="font-size: 0.85rem; color: #636e72;">We protect your data and only share anonymized research results with partners.</p>
+            <p style="font-size: 0.85rem; color: #636e72;">Data protection policy.</p>
             <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 20px; width:100%; border:none; padding:15px; background:var(--primary); color:white; border-radius:10px; cursor:pointer;">CLOSE</button>
         </div>
     </div>
 
     <script>
-        // 🛡️ CLOUDFLARE GATE
         function onTurnstileSuccess(token) {
             const btn = document.getElementById('gate-proceed-btn');
             btn.disabled = false;
@@ -168,14 +161,19 @@
             document.getElementById('cf-gate').style.display = 'none';
             document.getElementById('main-site-content').style.display = 'block';
         }
-
-        // 📋 MODAL HANDLERS
         function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
         function closeRules() { document.getElementById('rules-modal').style.display = 'none'; }
         function openTerms() { document.getElementById('terms-modal').style.display = 'block'; }
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
         function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; }
+
+        const liveBtn = document.getElementById("live-btn");
+        if(liveBtn) {
+            liveBtn.onclick = () => {
+                document.getElementById("live-payouts-section").scrollIntoView({ behavior: 'smooth' });
+            };
+        }
 
         window.onclick = (e) => { if(e.target.className === 'modal') e.target.style.display = "none"; }
     </script>
