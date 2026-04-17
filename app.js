@@ -1,5 +1,5 @@
 // NexGen Rewards Portal Logic
-const scriptUrl = "https://script.google.com/macros/s/AKfycbz_tYyO8zX6y5oH3e5c9o9o9o9o9o9o9o9o9o9o9o9o/exec"; // Replace with your actual Script URL
+const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
 const theoremApiKey = "3b7be1c302eb1d4be1fc37048968";
 const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
 const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee";
