@@ -16,18 +16,12 @@
             --primary-dark: #4f46e5;
             --accent: #f43f5e;
             --bg-dark: #0f172a;
-            --card-bg: #1e293b;
             --text-main: #f8fafc;
             --text-dim: #94a3b8;
             --glass: rgba(30, 41, 59, 0.7);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
             background-color: var(--bg-dark);
@@ -39,373 +33,71 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 480px;
-            padding: 20px;
-        }
+        .container { width: 100%; max-width: 450px; padding: 20px; }
 
-        /* Login Card */
         .card {
             background: var(--glass);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            padding: 40px;
+            padding: 35px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.6s ease-out;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo-icon { font-size: 2.8rem; color: var(--primary); margin-bottom: 10px; }
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+        .subtitle { color: var(--text-dim); font-size: 0.9rem; }
 
-        .logo-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
-        }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; }
+        input { width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; color: white; font-size: 1rem; }
+        input:focus { outline: none; border-color: var(--primary); }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
-        }
+        .security-box { background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 15px; margin-bottom: 25px; border: 1px dashed rgba(255, 255, 255, 0.1); }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; font-size: 0.85rem; }
+        .checkbox-group a { color: var(--primary); text-decoration: none; }
+        .captcha-container { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; }
+        .captcha-container input { width: 80px; text-align: center; padding: 8px; }
 
-        .subtitle {
-            color: var(--text-dim);
-            font-size: 0.95rem;
-        }
+        .btn-primary { width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; border-radius: 12px; padding: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+        /* Dashboard Styles */
+        .dashboard { display: none; }
+        .status-banner { background: rgba(34, 197, 94, 0.1); color: #4ade80; padding: 8px; border-radius: 8px; font-size: 0.75rem; text-align: center; margin-bottom: 20px; }
+        .user-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .avatar { width: 45px; height: 45px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .earnings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .earning-card { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; text-align: center; }
+        .earning-label { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 3px; }
+        .earning-value { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .btn-go { width: 100%; background: var(--accent); padding: 16px; border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; margin-bottom: 12px; }
+        .btn-secondary { width: 100%; background: rgba(255, 255, 255, 0.1); padding: 10px; border: none; border-radius: 10px; color: white; font-size: 0.85rem; cursor: pointer; }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+        #loading-overlay { position: fixed; inset: 0; background: var(--bg-dark); display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
+        .spinner { width: 30px; height: 30px; border: 3px solid rgba(255, 255, 255, 0.1); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-        }
-
-        /* 🛡️ SECURITY BOX */
-        .security-box {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .checkbox-group input {
-            width: 18px;
-            height: 18px;
-            margin-top: 2px;
-            cursor: pointer;
-        }
-
-        .checkbox-group label {
-            text-transform: none;
-            font-weight: 400;
-            font-size: 0.9rem;
-            cursor: pointer;
-            color: var(--text-main);
-        }
-
-        .checkbox-group a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .captcha-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .captcha-container label {
-            margin-bottom: 0;
-            font-size: 0.9rem;
-            text-transform: none;
-        }
-
-        .captcha-container input {
-            width: 100px;
-            text-align: center;
-        }
-
-        /* Buttons */
-        .btn-primary {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 16px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s;
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Dashboard View */
-        .dashboard {
-            display: none;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .user-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .user-info h2 { font-size: 1.2rem; margin-bottom: 2px; }
-        .user-info p { font-size: 0.85rem; color: var(--text-dim); }
-
-        .earnings-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .earning-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-        }
-
-        .earning-label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px; }
-        .earning-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
-
-        .btn-go {
-            width: 100%;
-            background: var(--accent);
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-bottom: 15px;
-            transition: 0.3s;
-        }
-
-        .btn-go:hover { transform: scale(1.02); filter: brightness(1.1); }
-
-        .btn-secondary {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            color: var(--text-main);
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 25px;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        .legal-links {
-            margin-top: 10px;
-        }
-
-        .legal-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            margin: 0 5px;
-        }
-
-        .legal-links a:hover { color: var(--primary); }
-
-        /* Status Banner */
-        .status-banner {
-            background: rgba(34, 197, 94, 0.1);
-            color: #4ade80;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid rgba(74, 222, 128, 0.2);
-        }
-
-        /* 🛡️ SECURITY GATE STYLES */
-        #security-gate {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-dark);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .gate-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
-        }
-
-        .robot-check-container {
-            margin: 30px 0;
-            background: #fff;
-            padding: 15px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-
-        .robot-check-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            color: #555;
-            font-size: 0.95rem;
-            user-select: none;
-            width: 100%;
-        }
-
-        .check-mark {
-            width: 24px;
-            height: 24px;
-            border: 2px solid #ccc;
-            border-radius: 2px;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .robot-check-box:hover .check-mark { border-color: var(--primary); }
-
-        .check-mark.loading {
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            border-radius: 50%;
-        }
-
-        .check-mark.verified {
-            background: #22c55e;
-            border-color: #22c55e;
-        }
-
-        .check-mark.verified::after {
-            content: '✓';
-            color: white;
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .gate-footer {
-            margin-top: 20px;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-        
-        .gate-footer span { color: var(--primary); font-family: monospace; }
-
-        @media (max-width: 480px) {
-            .card { padding: 30px 20px; }
-            h1 { font-size: 1.6rem; }
-        }
+        .footer { text-align: center; margin-top: 25px; color: var(--text-dim); font-size: 0.75rem; }
+        .legal-links { margin-top: 8px; }
+        .legal-links a { color: var(--text-dim); text-decoration: none; margin: 0 5px; }
     </style>
 </head>
 <body>
 
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <p id="loading-text">Verifying Session...</p>
+        <p id="loading-text">Loading...</p>
     </div>
 
     <div class="container">
-        <!-- 🔐 LOGIN VIEW -->
+        <!-- 🔐 LOGIN -->
         <div id="login-view" class="card">
             <div class="header">
                 <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
@@ -414,75 +106,54 @@
             </div>
 
             <div class="input-group">
-                <label for="workerId">Authorized ID</label>
-                <input type="text" id="workerId" placeholder="Enter your NEX-ID (e.g. NEX01)" required>
+                <label>Authorized ID</label>
+                <input type="text" id="workerId" placeholder="Enter NEX-ID">
             </div>
 
-            <!-- 🛡️ SECURITY & CONSENT (TheoremReach Requirements) -->
             <div class="security-box">
                 <div class="checkbox-group">
                     <input type="checkbox" id="termsConsent">
-                    <label for="termsConsent">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of NexGen Rewards.</label>
+                    <label for="termsConsent">I agree to the <a href="#">Terms</a> & <a href="#">Privacy</a>.</label>
                 </div>
-                
                 <div class="captcha-container">
                     <label>Human Check: <b>7 + 2 = ?</b></label>
                     <input type="number" id="captchaValue" placeholder="Solve">
                 </div>
             </div>
 
-            <button id="loginBtn" class="btn-primary" onclick="login()">
-                <span>Verify Access</span>
-                <i class="fas fa-arrow-right"></i>
-            </button>
+            <button class="btn-primary" onclick="login()">Verify Access</button>
 
             <div class="footer">
-                <p>Protected by NexGen Multi-Factor Shield</p>
                 <div class="legal-links">
                     <a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a>
                 </div>
             </div>
         </div>
 
-        <!-- 🚀 DASHBOARD VIEW -->
+        <!-- 🚀 DASHBOARD -->
         <div id="dashboard-view" class="card dashboard">
-            <div class="status-banner">
-                <i class="fas fa-circle-check"></i> Session Secured via HMAC-SHA1
-            </div>
-
+            <div class="status-banner">Session Secured via HMAC-SHA1</div>
             <div class="user-header">
                 <div class="avatar"><i class="fas fa-user-tie"></i></div>
                 <div class="user-info">
                     <h2 id="display-id">NEX01</h2>
-                    <p>Standard Authorized Worker</p>
+                    <p>Authorized Worker</p>
                 </div>
             </div>
-
             <div class="earnings-grid">
                 <div class="earning-card">
-                    <div class="earning-label">Pending Earnings</div>
+                    <div class="earning-label">Earnings</div>
                     <div class="earning-value" id="pending-amt">$0.00</div>
                 </div>
                 <div class="earning-card">
-                    <div class="earning-label">Tasks Today</div>
+                    <div class="earning-label">Tasks</div>
                     <div class="earning-value" id="tasks-count">0</div>
                 </div>
             </div>
-
-            <button class="btn-go" onclick="launchSurvey()">
-                LAUNCH TASK 🚀
-            </button>
-
-            <button class="btn-secondary" onclick="checkUserStats()">
-                <i class="fas fa-clock-rotate-left"></i> View History
-            </button>
-
-            <div id="history-panel" style="display:none; margin-top:20px; font-size:0.8rem; background:rgba(0,0,0,0.2); padding:15px; border-radius:10px;">
-                <p id="history-text" style="color:var(--text-dim)">Loading recent logs...</p>
-            </div>
-
-            <div class="footer">
-                <p>Support: publishers@theoremreach.com</p>
+            <button class="btn-go" onclick="launchSurvey()">LAUNCH TASK 🚀</button>
+            <button class="btn-secondary" onclick="checkUserStats()">View History</button>
+            <div id="history-panel" style="display:none; margin-top:15px; font-size:0.75rem; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;">
+                <p id="history-text">Loading...</p>
             </div>
         </div>
     </div>

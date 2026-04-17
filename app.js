@@ -1,12 +1,11 @@
-// 🔐 NEXGEN REWARDS - SECURE APP LOGIC
+// 🔐 NEXGEN REWARDS - STABLE SECURE LOGIC
 const theoremApiKey = "3b7be1c302eb1d4be1fc37048968";
-const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
 const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
 
 let currentUser = "";
 let userIP = "Unknown";
 
-// 🌐 Get User IP for Security Logs
+// 🌐 Get User IP
 fetch('https://api.ipify.org?format=json')
     .then(r => r.json())
     .then(d => userIP = d.ip)
@@ -18,24 +17,12 @@ function login() {
     const consent = document.getElementById('termsConsent').checked;
     const captcha = document.getElementById('captchaValue').value;
 
-    if (!workerId) {
-        alert("Please enter your Authorized ID.");
-        return;
-    }
+    if (!workerId) { alert("Please enter your ID."); return; }
+    if (!consent) { alert("Please agree to terms."); return; }
+    if (captcha != "9") { alert("Security Check Failed (7+2=9)"); return; }
 
-    if (!consent) {
-        alert("Please agree to the Terms and Privacy Policy to continue.");
-        return;
-    }
+    showLoading("Verifying ID...");
 
-    if (captcha != "9") {
-        alert("Security Check Failed! Please solve 7 + 2 correctly.");
-        return;
-    }
-
-    showLoading("Authenticating...");
-
-    // 🕵️ Verify if user is in the allowed list
     const ALLOWED_USERS = ["SAHIL01", "AMIT03", "NEX01", "NEX02", "NEX03", "NEX04", "NEX05", "NEX06", "NEX07", "NEX08", "NEX09", "NEX10", "TEST_USER"];
     
     setTimeout(() => {
@@ -47,51 +34,36 @@ function login() {
             hideLoading();
         } else {
             hideLoading();
-            alert("ACCESS DENIED: Unauthorized ID. Please contact Admin.");
+            alert("ID NOT AUTHORIZED");
         }
-    }, 1200);
+    }, 1000);
 }
 
-// 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
+// 🚀 LAUNCH SURVEY
 function launchSurvey() {
     const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
+    showLoading("Syncing Session...");
 
-    showLoading("Syncing Secure Session...");
-
-    // 🛡️ FRONTEND LOGGING
+    // Log to Google Sheet
     try {
         fetch(scriptUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                workerId: currentUser,
-                ipAddress: userIP,
-                timestamp: new Date().toISOString(),
-                action: "Survey Launched (Compliance Check)"
-            })
+            body: JSON.stringify({ workerId: currentUser, ip: userIP, action: "Launch" })
         });
     } catch (e) {}
     
-    // 🛡️ WEB DIRECT ENTRY URL
-    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${currentUser}`;
-
-    // 2. OFFICIAL HASH FORMULA: SHA1(user_id + secret_key)
     const signatureString = currentUser + theoremSecret;
     const finalSig = CryptoJS.SHA1(signatureString).toString();
+    const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${currentUser}&sig=${finalSig}`;
 
-    // 3. Final Signed URL (sig parameter is KEY)
-    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
-
-    setTimeout(() => {
-        window.location.href = surveyUrl;
-    }, 1000);
+    setTimeout(() => { window.location.href = surveyUrl; }, 800);
 }
 
-// 📉 FETCH STATS (From Google Apps Script)
+// 📈 CHECK STATS
 function checkUserStats() {
     document.getElementById('history-panel').style.display = 'block';
-    document.getElementById('history-text').innerText = "Connecting to Secure Ledger...";
+    document.getElementById('history-text').innerText = "Fetching Earnings...";
     
     fetch(`${scriptUrl}?user_id=${currentUser}&action=getStats`)
         .then(r => r.json())
@@ -99,17 +71,12 @@ function checkUserStats() {
             if (data.status === "success") {
                 document.getElementById('pending-amt').innerText = `$${data.earnings || '0.00'}`;
                 document.getElementById('tasks-count').innerText = data.tasks || '0';
-                document.getElementById('history-text').innerText = "Ledger Updated Successfully.";
-            } else {
-                document.getElementById('history-text').innerText = "No recent activity found.";
+                document.getElementById('history-text').innerText = "History Synced.";
             }
         })
-        .catch(() => {
-            document.getElementById('history-text').innerText = "History temporarily unavailable.";
-        });
+        .catch(() => { document.getElementById('history-text').innerText = "Error loading stats."; });
 }
 
-// ⏳ UI HELPERS
 function showLoading(text) {
     document.getElementById('loading-overlay').style.display = 'flex';
     document.getElementById('loading-text').innerText = text;
