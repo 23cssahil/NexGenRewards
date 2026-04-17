@@ -33,20 +33,23 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchIP();
 });
 
-// 3. Real-Time Payouts Logic (Fetching from Google Sheets)
+// 🛡️ 3. Real-Time Payouts Logic (Fetching from Google Sheets)
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
+    if (!container) return;
+
     try {
         const response = await fetch(`${scriptUrl}?action=getLivePayouts`);
         const payouts = await response.json();
         
-        if (payouts.length === 0) {
-            container.innerHTML = '<p style="opacity:0.5; font-size:0.8rem;">Waiting for new completions...</p>';
+        if (!Array.isArray(payouts) || payouts.length === 0) {
+            container.innerHTML = '<p style="opacity:0.5; font-size:0.8rem; padding: 20px;">Waiting for new completions...</p>';
             return;
         }
 
         container.innerHTML = '';
         payouts.forEach(p => {
+            if (!p.workerId || !p.amount) return;
             const div = document.createElement('div');
             div.className = 'payout-item';
             div.innerHTML = `
@@ -56,7 +59,7 @@ async function fetchRealPayouts() {
                     </div>
                     <div>
                         <div style="font-size: 0.95rem; font-weight: 600;">${p.workerId.substring(0,3)}***</div>
-                        <div style="font-size: 0.7rem; color: var(--text-dim);">${p.time}</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8;">${p.time || 'Recently'}</div>
                     </div>
                 </div>
                 <div class="payout-amount">+$${p.amount}</div>
@@ -64,15 +67,13 @@ async function fetchRealPayouts() {
             container.appendChild(div);
         });
     } catch (e) {
-        console.log("Stats update failed");
+        if(container) container.innerHTML = '<p style="color:#ff4757; font-size:0.8rem;">Live Feed Syncing...</p>';
     }
 }
 
-// Initial fetch and set interval
-fetchRealPayouts();
-setInterval(fetchRealPayouts, 30000); // 🔗 Sync with Google Sheets
+setInterval(fetchRealPayouts, 20000);
 
-// 4. Check User Stats from Google Sheet
+// 🛡️ 4. Check User Stats from Google Sheet
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -83,7 +84,6 @@ async function checkUserStats() {
     const btn = document.querySelector('.btn-secondary');
     btn.innerText = "Checking...";
     
-    // 🛡️ SECURITY SHIELD: Check auth
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
         const authStatus = await authResponse.text();
@@ -93,13 +93,7 @@ async function checkUserStats() {
             btn.innerText = "Check History";
             return;
         }
-    } catch (e) {
-        alert("Security Server Offline.");
-        btn.innerText = "Check History";
-        return;
-    }
-
-    try {
+        
         const response = await fetch(`${scriptUrl}?workerId=${workerId}`);
         const stats = await response.json();
         
@@ -107,22 +101,20 @@ async function checkUserStats() {
         document.getElementById('total-tasks').innerText = stats.totalTasks;
         document.getElementById('today-tasks').innerText = stats.todayTasks;
         document.getElementById('user-status').innerText = stats.status;
-        
         document.getElementById('user-stats-container').style.display = 'block';
         
-        // 🕒 AUTO-HIDE
         setTimeout(() => {
             document.getElementById('user-stats-container').style.display = 'none';
         }, 10000);
 
     } catch (e) {
-        alert("Could not fetch stats. Make sure you have done at least 1 task.");
+        alert("Could not fetch stats.");
     } finally {
         btn.innerText = "Check History";
     }
 }
 
-// 5. Launch Survey Logic (Always Fresh Surveys)
+// 🛡️ 5. Launch Survey Logic
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
     const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
@@ -141,7 +133,6 @@ async function launchSurvey() {
     btn.disabled = true;
     btn.innerHTML = "Authenticating ID...";
 
-    // 🛡️ SECURITY SHIELD
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
         const authStatus = await authResponse.text();
@@ -159,7 +150,6 @@ async function launchSurvey() {
         return;
     }
     
-    // Visual Security Check
     const logs = ["Connecting to Global Servers...", "Fetching New Surveys...", "Verifying ID...", "Securing Session..."];
     let i = 0;
     const interval = setInterval(() => {
@@ -175,8 +165,7 @@ async function launchSurvey() {
 // 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
 function proceedToSurvey(workerId) {
     const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
-
-    // 🛡️ FRONTEND LOGGING: Web Protocol Activation
+    
     try {
         fetch(scriptUrl, {
             method: 'POST',
@@ -191,21 +180,17 @@ function proceedToSurvey(workerId) {
         });
     } catch (e) {}
     
-    // 🛡️ WEB DIRECT ENTRY URL
     const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
-
-    // 2. OFFICIAL HASH FORMULA: SHA1(user_id + secret_key)
     const signatureString = workerId + theoremSecret;
     const finalSig = CryptoJS.SHA1(signatureString).toString();
-
-    // 3. Final Signed URL (sig parameter is KEY)
     const surveyUrl = `${baseUrl}&sig=${finalSig}`;
 
     window.location.href = surveyUrl;
 }
 
 function scrollToSurvey() {
-    document.getElementById('survey-portal').scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById('survey-portal');
+    if(el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
 // --- 🛡️ NEXGEN CORE SYSTEM STABLE ---
