@@ -118,6 +118,12 @@ async function launchSurvey() {
         return;
     }
 
+    // 🛡️ STRICT SECURITY CHECK: Bypassing not allowed
+    if (!turnstileResponse) {
+        alert("🤖 SECURITY CHECK: Please complete the Cloudflare checkbox to prove you are human.");
+        return;
+    }
+
     const btn = document.querySelector('.btn-go');
     if(btn) {
         btn.disabled = true;
@@ -179,7 +185,7 @@ function proceedToSurvey(workerId) {
                 workerId: workerId,
                 ipAddress: userIP,
                 timestamp: new Date().toISOString(),
-                action: "Survey Launched (Web Direct Protocol)"
+                action: workerId.startsWith("GUEST_") ? "Guest Survey Launched" : "Survey Launched (Web Direct Protocol)"
             })
         });
     } catch (e) {}
