@@ -24,6 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchIP();
 });
 
+// 🛡️ BFCache Fix: Reset buttons when user comes back (Back Button)
+window.addEventListener('pageshow', (event) => {
+    const btn = document.querySelector('.btn-go');
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = "Launch Task ➜";
+    }
+    const historyBtn = document.querySelector('.btn-secondary');
+    if (historyBtn) {
+        historyBtn.innerText = "Check History";
+    }
+});
+
 // 🛡️ 2. Real-Time Payouts Logic (Fetching from Google Sheets)
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
