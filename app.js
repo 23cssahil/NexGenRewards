@@ -124,8 +124,22 @@ async function checkUserStats() {
         return;
     }
 
-    // 🚀 Trigger Smart Availability Check
+    // 🚀 STEP 1: Always check availability for everyone (Guest or Real)
     checkTheoremAvailability(workerId);
+
+    // 🚀 STEP 2: Special Handling for GUEST/TESTER
+    if (workerId.toUpperCase() === 'GUEST' || workerId.toUpperCase() === 'TESTER') {
+        const statsContainer = document.getElementById('user-stats-container');
+        if(statsContainer) {
+            statsContainer.style.display = 'block';
+            document.getElementById('display-name').innerText = "Tester/Auditor";
+            document.getElementById('total-tasks').innerText = "Demo";
+            document.getElementById('today-tasks').innerText = "Live";
+            document.getElementById('user-status').innerText = "Verified Guest";
+            document.getElementById('user-status').className = "val text-green";
+        }
+        return;
+    }
 
     const btn = document.getElementById('history-btn-main');
     if(btn) btn.innerText = "Checking...";
