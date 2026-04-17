@@ -12,13 +12,19 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-    <!-- 🛡️ CLOUDFLARE ENTRANCE GATE -->
-    <div id="cf-gate" style="position: fixed; inset: 0; background: #070b14; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
+    <!-- 🛡️ CLOUDFLARE MANUAL ENTRANCE GATE -->
+    <div id="cf-gate" style="position: fixed; inset: 0; background: #070b14; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px;">
         <div class="logo" style="margin-bottom: 30px; font-size: 2.5rem;">NexGen<span>Rewards</span></div>
-        <p style="color: #94a3b8; margin-bottom: 20px; font-size: 1rem;">Verifying your browser security...</p>
-        <!-- 🛡️ Smart Challenge Widget -->
-        <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-callback="onTurnstileSuccess" data-theme="dark"></div>
-        <p style="color: #475569; font-size: 0.8rem; margin-top: 40px;">Secure connection established via Cloudflare</p>
+        <p style="color: #94a3b8; margin-bottom: 25px; font-size: 1rem;">Complete the security challenge to proceed.</p>
+        
+        <!-- 🛡️ Manual Checkbox Widget -->
+        <div class="cf-turnstile" data-sitekey="3x00000000000000000000FF" data-callback="onTurnstileSuccess" data-theme="dark"></div>
+        
+        <button id="gate-proceed-btn" disabled onclick="revealSite()" style="margin-top: 30px; padding: 15px 40px; border-radius: 12px; border: none; background: #1e293b; color: #475569; font-weight: 700; font-size: 1rem; cursor: not-allowed; transition: 0.3s; width: 100%; max-width: 300px;">
+            VERIFY & PROCEED
+        </button>
+        
+        <p style="color: #475569; font-size: 0.75rem; margin-top: 40px;">🛡️ Secure Portal Entrance Layer</p>
     </div>
 
     <div id="main-site-content" style="display: none;">
@@ -177,20 +183,31 @@
     </div> <!-- End main-site-content -->
 
     <script>
-        // 🛡️ CLOUDFLARE GATE LOGIC
+        // 🛡️ CLOUDFLARE MANUAL GATE LOGIC
         function onTurnstileSuccess(token) {
-            console.log("Cloudflare Verified!");
+            console.log("Cloudflare Check Passed!");
+            const btn = document.getElementById('gate-proceed-btn');
+            
+            // 🌀 Enable Button & Make it Vivid
+            btn.disabled = false;
+            btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
+            btn.style.color = 'white';
+            btn.style.cursor = 'pointer';
+            btn.style.boxShadow = '0 10px 20px rgba(99, 102, 241, 0.4)';
+            btn.innerText = "VERIFY & PROCEED ➜";
+        }
+
+        function revealSite() {
             const gate = document.getElementById('cf-gate');
             const content = document.getElementById('main-site-content');
             
-            // Smooth transition
+            // 🎭 Smooth Transition
             gate.style.opacity = '0';
             gate.style.transition = '0.8s ease';
             
             setTimeout(() => {
                 gate.style.display = 'none';
                 content.style.display = 'block';
-                // Trigger any animations needed
             }, 800);
         }
 
