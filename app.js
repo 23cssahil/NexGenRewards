@@ -122,14 +122,15 @@ async function checkUserStats() {
 // 🛡️ 4. Launch Survey with Reviewer Whitelist
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
-    const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
+    // 🛡️ Use global token from index.html
+    const turnstileResponse = typeof lastTurnstileToken !== 'undefined' ? lastTurnstileToken : "";
 
     if (!workerId) {
         alert("Enter your ID to access the survey wall.");
         return;
     }
     if (!turnstileResponse) {
-        alert("Please complete the security check first.");
+        alert("🛡️ Security Verification: Please complete the Cloudflare check on the gate first.");
         return;
     }
 

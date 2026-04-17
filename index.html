@@ -246,15 +246,19 @@
 
     <script>
         // 🛡️ CLOUDFLARE MANUAL GATE LOGIC
+        let lastTurnstileToken = ""; // 🛡️ Global Security Token
+        
         function onTurnstileSuccess(token) {
-            console.log("Cloudflare Check Passed!");
+            lastTurnstileToken = token;
             const btn = document.getElementById('gate-proceed-btn');
-            btn.disabled = false;
-            btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
-            btn.style.color = 'white';
-            btn.style.cursor = 'pointer';
-            btn.style.boxShadow = '0 10px 20px rgba(99, 102, 241, 0.4)';
-            btn.innerText = "VERIFY & PROCEED ➜";
+            if(btn) {
+                btn.disabled = false;
+                btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
+                btn.style.color = 'white';
+                btn.style.cursor = 'pointer';
+                btn.style.boxShadow = '0 10px 20px rgba(99, 102, 241, 0.4)';
+                btn.innerText = "VERIFY & PROCEED ➜";
+            }
         }
 
         function revealSite() {
