@@ -1,23 +1,5 @@
-// 🔗 Global Configuration
-const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
-const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
-const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
-
-let userIP = "Detecting Security...";
-
-// 🛡️ 1. Professional IP Detection
-async function fetchIP() {
-    try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        userIP = data.ip;
-        const ipDisplay = document.getElementById('user-ip');
-        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP} (SECURED)`;
-    } catch (e) {
-        if(document.getElementById('user-ip')) 
-            document.getElementById('user-ip').innerText = "IP: SECURE CONNECTION";
-    }
-}
+let userIP = "Detecting...";
+const scriptUrl = "/api/generate-link"; // 🛡️ Ab ye hamare secure API ko point karega
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchRealPayouts();
@@ -43,20 +25,32 @@ window.addEventListener('pageshow', (event) => {
     }
 });
 
-// 🛡️ 2. Real-Time Payouts Logic (Fetching from Google Sheets)
+// 🛡️ 1. Fetch User IP
+async function fetchIP() {
+    try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        userIP = data.ip;
+        const ipDisplay = document.getElementById('user-ip');
+        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP}`;
+    } catch (e) {
+        userIP = "Unknown";
+    }
+}
+
+// 🛡️ 2. Real-Time Payouts Logic (Social Proof)
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
-    if (!container) return;
-
     try {
-        const response = await fetch(`${scriptUrl}?action=getLivePayouts`);
-        const payouts = await response.json();
-        
-        if (!Array.isArray(payouts) || payouts.length === 0) {
-            container.innerHTML = '<p style="opacity:0.5; font-size:0.8rem; padding: 20px;">Waiting for new completions...</p>';
-            return;
-        }
+        const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTqI67V_T71O1H6-q9q9-9q9-9q9-9q9-9q9/pub?output=csv');
+        const data = await res.text();
+        const rows = data.split('\n').slice(1);
+        const payouts = rows.map(r => {
+            const cols = r.split(',');
+            return { workerId: cols[0], amount: cols[3], time: cols[2] };
+        }).filter(p => p.workerId && p.amount);
 
+        if(!container) return;
         container.innerHTML = '';
         const latestPayouts = payouts.slice(0, 6);
         
@@ -89,7 +83,7 @@ async function fetchRealPayouts() {
 
 setInterval(fetchRealPayouts, 20000);
 
-// 🛡️ 3. Check User Stats from Google Sheet
+// 🛡️ 3. Smart Availability Checker (via Secure API)
 async function checkTheoremAvailability(workerId) {
     const badge = document.getElementById('survey-availability-badge');
     const text = document.getElementById('availability-text');
@@ -98,8 +92,8 @@ async function checkTheoremAvailability(workerId) {
     text.innerText = "Checking Surveys...";
     
     try {
-        const response = await fetch(`https://api.theoremreach.com/api/publishers/v1/user_details?api_key=${theoremApiKey}&user_id=${workerId}&ip=${userIP}`);
-        const data = await response.json();
+        const res = await fetch(`/api/generate-link?action=checkAvailability&workerId=${workerId}&ipAddress=${userIP}`);
+        const data = await res.json();
         
         if(data.surveys_available) {
             badge.style.background = "rgba(16, 185, 129, 0.1)";
@@ -111,12 +105,12 @@ async function checkTheoremAvailability(workerId) {
             badge.style.color = "#94a3b8";
         }
     } catch (e) {
-        // Fallback if CORS blocks or API fails
         text.innerText = "Survey Session: ACTIVE 🛡️";
         badge.style.color = "#6366f1";
     }
 }
 
+// 🛡️ 4. Check User Stats (History)
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -124,10 +118,8 @@ async function checkUserStats() {
         return;
     }
 
-    // 🚀 STEP 1: Always check availability for everyone (Guest or Real)
     checkTheoremAvailability(workerId);
 
-    // 🚀 STEP 2: Special Handling for GUEST/TESTER
     if (workerId.toUpperCase() === 'GUEST' || workerId.toUpperCase() === 'TESTER') {
         const statsContainer = document.getElementById('user-stats-container');
         if(statsContainer) {
@@ -136,7 +128,6 @@ async function checkUserStats() {
             document.getElementById('total-tasks').innerText = "Demo";
             document.getElementById('today-tasks').innerText = "Live";
             document.getElementById('user-status').innerText = "Verified Guest";
-            document.getElementById('user-status').className = "val text-green";
         }
         return;
     }
@@ -145,125 +136,71 @@ async function checkUserStats() {
     if(btn) btn.innerText = "Checking...";
     
     try {
-        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
-        const authStatus = (await authResponse.text()).trim().toUpperCase();
+        // Note: Replace with your actual history sheet URL if needed
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/e/2PACX-1vTqI67V_T71O1H6-q9q9-9q9-9q9-9q9-9q9/pub?output=csv`);
+        const data = await res.text();
+        const rows = data.split('\n');
+        const userRow = rows.find(r => r.includes(workerId));
 
-        if (authStatus !== "AUTHORIZED") {
-            alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
+        if (btn) btn.innerText = "Check History";
+
+        if (!userRow) {
+            alert("⚠️ Worker ID not found in database.");
             return;
         }
-        
-        const response = await fetch(`${scriptUrl}?workerId=${workerId}`);
-        const stats = await response.json();
-        
-        if(stats) {
-            document.getElementById('display-name').innerText = workerId;
-            document.getElementById('total-tasks').innerText = stats.totalTasks || 0;
-            document.getElementById('today-tasks').innerText = stats.todayTasks || 0;
-            document.getElementById('user-status').innerText = stats.status || "Active";
-            document.getElementById('user-stats-container').style.display = 'block';
-            document.getElementById('user-stats-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
 
+        const statsContainer = document.getElementById('user-stats-container');
+        if(statsContainer) {
+            statsContainer.style.display = 'block';
+            const cols = userRow.split(',');
+            document.getElementById('display-name').innerText = workerId;
+            document.getElementById('total-tasks').innerText = cols[1] || "0";
+            document.getElementById('today-tasks').innerText = cols[2] || "0";
+            document.getElementById('user-status').innerText = "Verified";
+        }
     } catch (e) {
-        alert("System Busy: Could not fetch history.");
-    } finally {
-        if(btn) btn.innerText = "Check History";
+        if (btn) btn.innerText = "Check History";
     }
 }
 
-// 🛡️ 4. Launch Survey Logic
+// 🛡️ 5. Launch Survey (via Secure API)
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
-    const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]') ? document.querySelector('[name="cf-turnstile-response"]').value : "";
+    const turnstileResponse = typeof turnstile !== 'undefined' ? turnstile.getResponse() : "";
 
-    // 🛡️ ABSOLUTE SECURITY CHECK: Official Cloudflare Method
-    const currentToken = typeof turnstile !== 'undefined' ? turnstile.getResponse() : "";
-    
-    if (!currentToken) {
-        alert("🤖 SECURITY CHECK: Please complete the Cloudflare checkbox to prove you are human.");
+    if (!workerId || workerId.length < 3) {
+        alert("Enter a valid Worker ID.");
         return;
     }
 
-    const btn = document.querySelector('.btn-go');
+    if (!turnstileResponse) {
+        alert("🤖 SECURITY CHECK: Please complete the Cloudflare checkbox.");
+        return;
+    }
+
+    const btn = document.getElementById('launch-btn');
+    const isGuest = workerId.toUpperCase() === 'GUEST' || workerId.toUpperCase() === 'TESTER';
+    const finalId = isGuest ? `GUEST_${Math.floor(Math.random() * 9000 + 1000)}` : workerId;
+
     if(btn) {
         btn.disabled = true;
-        btn.innerHTML = "Authenticating ID...";
+        btn.innerHTML = "Securing Session...";
     }
 
-    // 🛡️ Safe Guest Mode for Test/Review
-    const isGuest = workerId.toUpperCase() === "GUEST" || workerId.toUpperCase() === "TESTER";
-    
-    if (isGuest) {
-        // Access Granted instantly for Test IDs
-    } else {
-        try {
-            const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
-            const authStatus = (await authResponse.text()).trim().toUpperCase();
-
-            if (authStatus !== "AUTHORIZED") {
-                alert("⚠️ UNAUTHORIZED ID: Access Denied.");
-                if(btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = "Launch Task ➜";
-                }
-                return;
-            }
-        } catch (e) {
-            alert("Security Server Offline.");
-            if(btn) {
-                btn.disabled = false;
-                btn.innerHTML = "Launch Task ➜";
-            }
-            return;
-        }
-    }
-    
-    const logs = ["🛡️ Connecting to Global Servers...", "🔍 Fetching New Surveys...", "🔐 Verifying ID...", "🚀 Securing Session..."];
-    let i = 0;
-    const interval = setInterval(() => {
-        if(btn) btn.innerHTML = logs[i];
-        i++;
-        if(i >= logs.length) {
-            clearInterval(interval);
-            // 🛡️ If Guest, generate a UNIQUE sub-ID to avoid Multi-Device Block
-            const finalId = isGuest ? `GUEST_${Math.floor(Math.random() * 9000 + 1000)}` : workerId;
-            proceedToSurvey(finalId);
-        }
-    }, 800);
-}
-
-// 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
-function proceedToSurvey(uniqueId) {
-    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
-    
     try {
-        // 🛡️ Log entry to Sheet (Unified GUEST log to keep it in ONE tab)
-        const logId = uniqueId.startsWith("GUEST_") ? "GUEST" : uniqueId;
-        const logAction = uniqueId.startsWith("GUEST_") ? `Test Launch: ${uniqueId}` : "Survey Launched (Web Direct Protocol)";
-
-        fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                workerId: logId,
-                ipAddress: userIP,
-                timestamp: new Date().toISOString(),
-                action: logAction
-            })
-        });
-    } catch (e) {}
-    
-    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${uniqueId}`;
-    const signatureString = uniqueId + theoremSecret;
-    const finalSig = CryptoJS.SHA1(signatureString).toString();
-    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
-
-    window.location.href = surveyUrl;
-}
-
-function scrollToSurvey() {
-    const el = document.getElementById('survey-portal');
-    if(el) el.scrollIntoView({ behavior: 'smooth' });
+        const res = await fetch(`/api/generate-link?action=launch&workerId=${finalId}&ipAddress=${userIP}`);
+        const data = await res.json();
+        
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            throw new Error("Link error");
+        }
+    } catch (e) {
+        alert("⚠️ Security Engine Error. Please try again.");
+        if(btn) {
+            btn.disabled = false;
+            btn.innerHTML = "Launch Task ➜";
+        }
+    }
 }
