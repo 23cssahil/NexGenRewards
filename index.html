@@ -103,14 +103,29 @@
     </main>
 
     <footer>
-        <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.8rem; flex-wrap: wrap;">
-            <a href="javascript:void(0)" onclick="openTerms()" style="color:var(--light); opacity:0.6; text-decoration:none;">Terms of Service</a>
-            <a href="javascript:void(0)" onclick="openPrivacy()" style="color:var(--light); opacity:0.6; text-decoration:none;">Privacy Policy</a>
-            <a href="#how-it-works" style="color:var(--light); opacity:0.6; text-decoration:none;">Fraud Protection</a>
-            <a href="mailto:support@nexgen-rewards.com" style="color:var(--light); opacity:0.6; text-decoration:none;">Contact Support</a>
+        <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; flex-wrap: wrap;">
+            <a href="javascript:void(0)" onclick="openTerms()" class="footer-link">Terms of Service</a>
+            <a href="javascript:void(0)" onclick="openPrivacy()" class="footer-link">Privacy Policy</a>
+            <a href="javascript:void(0)" onclick="openFraud()" class="footer-link">Fraud Protection</a>
+            <a href="mailto:support@nexgen-rewards.com" class="footer-link">Contact Support</a>
         </div>
         <p>&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
     </footer>
+
+    <!-- 🚫 Fraud Protection Modal -->
+    <div id="fraud-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeFraud()">&times;</span>
+            <h2 style="color: #ff4757; margin-bottom: 20px;">🚫 Fraud Protection</h2>
+            <div class="rules-list" style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #444;">
+                <p><strong>1. VPN/Proxy Detection:</strong> Our system automatically detects and logs IP address anomalies. Using VPN will lead to a permanent ban.</p>
+                <p><strong>2. Multi-Account Filter:</strong> Only one account per person/device is allowed. Duplicate accounts are flagged and suspended.</p>
+                <p><strong>3. Speed Checks:</strong> Answering surveys too fast (Speeding) triggers a quality alert and can lead to payment reversal.</p>
+                <p><strong>4. Consistent Data:</strong> We monitor for inconsistent profile answers to protect our research partners' data quality.</p>
+            </div>
+            <button class="btn-primary" onclick="closeFraud()" style="margin-top: 20px; border-radius: 10px; border:none; padding:12px; background:#ff4757; color:white; width:100%; cursor:pointer;">I UNDERSTAND</button>
+        </div>
+    </div>
 
     <!-- 📄 Terms & Conditions Modal -->
     <div id="terms-modal" class="modal">
@@ -148,6 +163,8 @@
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
         function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; }
+        function openFraud() { document.getElementById('fraud-modal').style.display = 'block'; }
+        function closeFraud() { document.getElementById('fraud-modal').style.display = 'none'; }
         
         // Close modals on outside click
         window.onclick = function(event) {

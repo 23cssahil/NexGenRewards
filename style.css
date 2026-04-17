@@ -395,6 +395,21 @@ footer {
     opacity: 0.6;
 }
 
+.footer-link {
+    color: var(--light);
+    opacity: 0.6;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.footer-link:hover {
+    opacity: 1;
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
 /* --- Mobile Specific Optimization --- */
 @media (max-width: 768px) {
     .nav-links { display: none; } /* Hide standard nav on mobile */
