@@ -113,13 +113,10 @@ async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
     const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]') ? document.querySelector('[name="cf-turnstile-response"]').value : "";
 
-    if (!workerId || workerId.length < 3) {
-        alert("Enter a valid Worker ID.");
-        return;
-    }
-
-    // 🛡️ STRICT SECURITY CHECK: Bypassing not allowed
-    if (!turnstileResponse) {
+    // 🛡️ ABSOLUTE SECURITY CHECK: Official Cloudflare Method
+    const currentToken = typeof turnstile !== 'undefined' ? turnstile.getResponse() : "";
+    
+    if (!currentToken) {
         alert("🤖 SECURITY CHECK: Please complete the Cloudflare checkbox to prove you are human.");
         return;
     }
@@ -173,25 +170,29 @@ async function launchSurvey() {
 }
 
 // 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
-function proceedToSurvey(workerId) {
+function proceedToSurvey(uniqueId) {
     const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
     
     try {
+        // 🛡️ Log entry to Sheet (Unified GUEST log to keep it in ONE tab)
+        const logId = uniqueId.startsWith("GUEST_") ? "GUEST" : uniqueId;
+        const logAction = uniqueId.startsWith("GUEST_") ? `Test Launch: ${uniqueId}` : "Survey Launched (Web Direct Protocol)";
+
         fetch(scriptUrl, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                workerId: workerId,
+                workerId: logId,
                 ipAddress: userIP,
                 timestamp: new Date().toISOString(),
-                action: workerId.startsWith("GUEST_") ? "Guest Survey Launched" : "Survey Launched (Web Direct Protocol)"
+                action: logAction
             })
         });
     } catch (e) {}
     
-    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
-    const signatureString = workerId + theoremSecret;
+    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${uniqueId}`;
+    const signatureString = uniqueId + theoremSecret;
     const finalSig = CryptoJS.SHA1(signatureString).toString();
     const surveyUrl = `${baseUrl}&sig=${finalSig}`;
 
