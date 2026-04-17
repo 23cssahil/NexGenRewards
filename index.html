@@ -128,24 +128,43 @@
         <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; flex-wrap: wrap;">
             <a href="javascript:void(0)" onclick="openTerms()" class="footer-link">Terms of Service</a>
             <a href="javascript:void(0)" onclick="openPrivacy()" class="footer-link">Privacy Policy</a>
-            <a href="javascript:void(0)" onclick="openFraud()" class="footer-link">Fraud Protection</a>
+            <a href="javascript:void(0)" onclick="openRules()" class="footer-link">Fraud Protection</a>
             <a href="mailto:support@nexgen-rewards.com" class="footer-link">Contact Support</a>
         </div>
         <p>&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
     </footer>
 
-    <!-- 🚫 Fraud Protection Modal -->
-    <div id="fraud-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeFraud()">&times;</span>
-            <h2 style="color: #ff4757; margin-bottom: 20px;">🚫 Fraud Protection</h2>
-            <div class="rules-list" style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #444;">
-                <p><strong>1. VPN/Proxy Detection:</strong> Our system automatically detects and logs IP address anomalies. Using VPN will lead to a permanent ban.</p>
-                <p><strong>2. Multi-Account Filter:</strong> Only one account per person/device is allowed. Duplicate accounts are flagged and suspended.</p>
-                <p><strong>3. Speed Checks:</strong> Answering surveys too fast (Speeding) triggers a quality alert and can lead to payment reversal.</p>
-                <p><strong>4. Consistent Data:</strong> We monitor for inconsistent profile answers to protect our research partners' data quality.</p>
+    <!-- ⚠️ STRICT RULES MODAL (Premium UI) -->
+    <div id="rules-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px; background: rgba(255, 255, 255, 0.98); border: 3px solid #ff4757; border-radius: 30px; box-shadow: 0 0 50px rgba(255, 71, 87, 0.3);">
+            <span class="close-modal" id="rules-close-icon" style="color: #ff4757;">&times;</span>
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="fas fa-triangle-exclamation" style="font-size: 3rem; color: #ff4757; margin-bottom: 15px;"></i>
+                <h2 style="color: #2f3542; font-size: 1.8rem; font-weight: 800;">STRICT WORKER COMPLIANCE</h2>
+                <p style="color: #57606f; font-size: 0.9rem;">TheoremReach Official Requirements for High-Payouts</p>
             </div>
-            <button class="btn-primary" onclick="closeFraud()" style="margin-top: 20px; border-radius: 10px; border:none; padding:12px; background:#ff4757; color:white; width:100%; cursor:pointer;">I UNDERSTAND</button>
+            
+            <div class="rules-list" style="max-height: 450px; overflow-y: auto; padding: 10px;">
+                <div style="background: rgba(255, 71, 87, 0.05); padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid #ff4757;">
+                    <p><strong>🚫 1. ABSOLUTELY NO VPN/PROXY:</strong> Our system uses Deep Packet Inspection. Using VPN, Proxy, or public Wi-Fi will lead to an <u>INSTANT PERMANENT BAN</u> and forfeiture of all earnings.</p>
+                </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid #6366f1;">
+                    <p><strong>⚖️ 2. THE "CONSISTENCY" RULE:</strong> TheoremReach monitors your data patterns. You must use the SAME Age, Gender, City, and Income in 100% of surveys. Mismatch results in 'Screen-outs'.</p>
+                </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid #6366f1;">
+                    <p><strong>⏳ 3. NO SPEEDING:</strong> Do not finish surveys in 2 minutes. TheoremReach calculates "Estimated Time". Finishing too fast flags you as a BOT and payment is REVERSED.</p>
+                </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid #6366f1;">
+                    <p><strong>💎 4. PREMIUM PROFILE:</strong> Always maintain a "Married & Full-time Employed" status. High-value brands want high-earners. This ensures 3x more survey availability.</p>
+                </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid #6366f1;">
+                    <p><strong>📱 5. DEVICE INTEGRITY:</strong> One ID per Device. Using multiple Worker IDs on the same mobile device or IP will trigger a multi-account fraud flag.</p>
+                </div>
+            </div>
+            
+            <button class="btn-primary" id="close-rules" style="margin-top: 25px; border-radius: 15px; padding: 18px; background: #2f3542; color: white; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 1rem;">
+                I UNDERSTAND & AGREE TO COMPLY
+            </button>
         </div>
     </div>
 
@@ -187,8 +206,6 @@
         function onTurnstileSuccess(token) {
             console.log("Cloudflare Check Passed!");
             const btn = document.getElementById('gate-proceed-btn');
-            
-            // 🌀 Enable Button & Make it Vivid
             btn.disabled = false;
             btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
             btn.style.color = 'white';
@@ -200,23 +217,30 @@
         function revealSite() {
             const gate = document.getElementById('cf-gate');
             const content = document.getElementById('main-site-content');
-            
-            // 🎭 Smooth Transition
             gate.style.opacity = '0';
             gate.style.transition = '0.8s ease';
-            
             setTimeout(() => {
                 gate.style.display = 'none';
                 content.style.display = 'block';
             }, 800);
         }
 
+        // 📋 RULES MODAL LOGIC
+        const rulesModal = document.getElementById("rules-modal");
+        const rulesBtn = document.getElementById("rules-btn");
+        const closeIcon = document.getElementById("rules-close-icon");
+        const closeBtn = document.getElementById("close-rules");
+
+        if(rulesBtn) rulesBtn.onclick = () => rulesModal.style.display = "block";
+        if(closeIcon) closeIcon.onclick = () => rulesModal.style.display = "none";
+        if(closeBtn) closeBtn.onclick = () => rulesModal.style.display = "none";
+
+        function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
+        function closeRules() { document.getElementById('rules-modal').style.display = 'none'; }
         function openTerms() { document.getElementById('terms-modal').style.display = 'block'; }
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
         function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; }
-        function openFraud() { document.getElementById('fraud-modal').style.display = 'block'; }
-        function closeFraud() { document.getElementById('fraud-modal').style.display = 'none'; }
         
         window.onclick = function(event) {
             if (event.target.className === 'modal') {
