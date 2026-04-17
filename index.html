@@ -88,57 +88,59 @@
             </section>
         </main>
 
-        <footer>
-            <div style="margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-                <span style="font-size: 0.75rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase;">Portal Administrator</span>
-                <div style="display: flex; gap: 2rem;">
-                    <a href="mailto:username47397@gmail.com"><i class="fas fa-envelope"></i></a>
-                    <a href="https://instagram.com/i.m.sahil.87" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://linkedin.com/in/sahil-khan-729199326" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <footer style="padding: 4rem 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(7, 11, 20, 0.8);">
+            <div class="footer-bottom">
+                <div style="margin-bottom: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.2rem;">
+                    <span style="font-size: 0.75rem; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; font-weight: 800; opacity: 0.8;">Portal Administrator</span>
+                    <div style="display: flex; gap: 2.5rem; align-items: center;">
+                        <a href="mailto:username47397@gmail.com" style="color: #94a3b8; font-size: 1.5rem; transition: 0.3s;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#94a3b8'"><i class="fas fa-envelope"></i></a>
+                        <a href="https://instagram.com/i.m.sahil.87" target="_blank" style="color: #94a3b8; font-size: 1.5rem; transition: 0.3s;" onmouseover="this.style.color='#a855f7'" onmouseout="this.style.color='#94a3b8'"><i class="fab fa-instagram"></i></a>
+                        <a href="https://linkedin.com/in/sahil-khan-729199326" target="_blank" style="color: #94a3b8; font-size: 1.5rem; transition: 0.3s;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#94a3b8'"><i class="fab fa-linkedin"></i></a>
+                    </div>
                 </div>
+                <div style="display: flex; justify-content: center; gap: 2rem; font-size: 0.85rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                    <a href="javascript:void(0)" onclick="openTerms()" style="color: #64748b; text-decoration: none; transition: 0.3s; font-weight: 600;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Terms of Service</a>
+                    <a href="javascript:void(0)" onclick="openPrivacy()" style="color: #64748b; text-decoration: none; transition: 0.3s; font-weight: 600;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openRules()" style="color: #64748b; text-decoration: none; transition: 0.3s; font-weight: 600;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#64748b'">Fraud Protection</a>
+                </div>
+                <p style="color: #475569; font-size: 0.8rem; letter-spacing: 0.5px;">&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
             </div>
-            <div style="display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                <a href="javascript:void(0)" onclick="openTerms()">Terms of Service</a>
-                <a href="javascript:void(0)" onclick="openPrivacy()">Privacy Policy</a>
-                <a href="javascript:void(0)" onclick="openRules()">Fraud Protection</a>
-            </div>
-            <p>&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
         </footer>
 
         <!-- ⚠️ DETAILED MODALS -->
-        <div id="rules-modal" class="modal"><div class="modal-content" style="max-width: 600px; background: #0f172a; border-radius: 25px; padding: 35px; border: 2px solid #ff4757;">
-            <span class="close-modal" onclick="closeRules()">&times;</span>
-            <h2 style="color: #ff4757; margin-bottom: 20px;">STRICT COMPLIANCE RULES</h2>
-            <div style="text-align: left; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                <p><strong>1. ANTI-FRAUD:</strong> Use of VPN, Proxy, or Tor results in an immediate permanent ban. We track IP integrity via SHA1 encryption.</p>
-                <p><strong>2. CONSISTENCY:</strong> Your profile data (Age, Gender, City) must match in every survey to maintain research quality.</p>
-                <p><strong>3. NO SPEEDING:</strong> Read all questions carefully. Rapidly clicking through surveys will lead to payment rejection.</p>
-                <p><strong>4. DEVICE POLICY:</strong> Only one account per physical device is permitted. System fingerprinting detects multi-accounting.</p>
+        <div id="rules-modal" class="modal"><div class="modal-content" style="max-width: 600px; background: #0f172a; border-radius: 25px; padding: 40px; border: 2px solid #ff4757; box-shadow: 0 0 50px rgba(255, 71, 87, 0.2);">
+            <span class="close-modal" onclick="closeRules()" style="color:#ff4757">&times;</span>
+            <h2 style="color: #ff4757; margin-bottom: 25px; font-weight: 800; font-size: 1.8rem;">STRICT COMPLIANCE RULES</h2>
+            <div style="text-align: left; font-size: 0.9rem; color: #cbd5e1; line-height: 1.7; max-height: 400px; overflow-y: auto; padding-right: 15px;">
+                <p style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid #ff4757;"><strong>1. ANTI-FRAUD:</strong> Use of VPN, Proxy, or Tor results in an immediate permanent ban. We track IP integrity via SHA1 encryption.</p>
+                <p style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid #6366f1;"><strong>2. CONSISTENCY:</strong> Your profile data (Age, Gender, City) must match in every survey to maintain research quality.</p>
+                <p style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid #10b981;"><strong>3. NO SPEEDING:</strong> Read all questions carefully. Rapidly clicking through surveys will lead to payment rejection.</p>
+                <p style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border-left: 4px solid #f59e0b;"><strong>4. DEVICE POLICY:</strong> Only one account per physical device is permitted. System fingerprinting detects multi-accounting.</p>
             </div>
-            <button class="btn-primary" onclick="closeRules()" style="background:#ff4757; margin-top: 20px; width: 100%;">I COMPLY</button>
+            <button class="btn-primary" onclick="closeRules()" style="background: linear-gradient(135deg, #ff4757, #ee5253); margin-top: 30px; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);">I AGREE & COMPLY</button>
         </div></div>
 
-        <div id="terms-modal" class="modal"><div class="modal-content" style="max-width: 600px; background: #0f172a; border-radius: 25px; padding: 35px;">
-            <span class="close-modal" onclick="closeTerms()">&times;</span>
-            <h2 style="color: var(--primary); margin-bottom: 20px;">📜 Terms of Service</h2>
-            <div style="text-align: left; font-size: 0.85rem; color: #94a3b8; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+        <div id="terms-modal" class="modal"><div class="modal-content" style="max-width: 650px; background: #0f172a; border-radius: 30px; padding: 45px; border: 1px solid rgba(255,255,255,0.1);">
+            <span class="close-modal" onclick="closeTerms()" style="color:#fff">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 25px; font-size: 2rem; font-weight: 800;">📜 Terms of Service</h2>
+            <div style="text-align: left; font-size: 0.9rem; color: #94a3b8; line-height: 1.8; max-height: 400px; overflow-y: auto; padding-right: 20px;">
                 <p><strong>Agreement:</strong> By using this portal, you agree to comply with all partner research standards and anti-fraud protocols.</p>
-                <p><strong>Eligibility:</strong> You must be 18+ to participate in market research sessions.</p>
-                <p><strong>Rewards:</strong> Payouts are generated by TheoremReach and are subject to their final verification of data quality.</p>
-                <p><strong>Conduct:</strong> Any attempt to hack or automate survey responses will result in legal action and account termination.</p>
+                <p><strong>Eligibility:</strong> Access is restricted to individuals aged 18 and older. Any unauthorized access by minors is a violation of our research partnership agreements.</p>
+                <p><strong>Rewards:</strong> Payouts are generated by TheoremReach and are subject to their final verification of data quality. Rewards may be reversed if fraud is identified.</p>
+                <p><strong>Conduct:</strong> Any attempt to hack, automate, or share accounts will result in immediate termination of access and forfeiture of earnings.</p>
             </div>
-            <button class="btn-primary" onclick="closeTerms()" style="margin-top: 20px; width: 100%;">AGREE</button>
+            <button class="btn-primary" onclick="closeTerms()" style="margin-top: 35px; width: 100%; padding: 18px; border-radius: 15px; background: linear-gradient(135deg, #6366f1, #a855f7); font-weight: 800; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);">I ACCEPT TERMS</button>
         </div></div>
 
-        <div id="privacy-modal" class="modal"><div class="modal-content" style="max-width: 600px; background: #0f172a; border-radius: 25px; padding: 35px;">
-            <span class="close-modal" onclick="closePrivacy()">&times;</span>
-            <h2 style="color: var(--primary); margin-bottom: 20px;">🛡️ Privacy Policy</h2>
-            <div style="text-align: left; font-size: 0.85rem; color: #94a3b8; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                <p><strong>Data Collection:</strong> we collect Worker ID and IP metadata for security and tracking. No personal details are stored.</p>
-                <p><strong>Partners:</strong> Data is shared with TheoremReach for research analysis under strict GDPR/CCPA guidelines.</p>
-                <p><strong>Security:</strong> All transmissions are secured via SHA1 and SSL encryption protocols.</p>
+        <div id="privacy-modal" class="modal"><div class="modal-content" style="max-width: 650px; background: #0f172a; border-radius: 30px; padding: 45px; border: 1px solid rgba(255,255,255,0.1);">
+            <span class="close-modal" onclick="closePrivacy()" style="color:#fff">&times;</span>
+            <h2 style="color: #10b981; margin-bottom: 25px; font-size: 2rem; font-weight: 800;">🛡️ Privacy Policy</h2>
+            <div style="text-align: left; font-size: 0.9rem; color: #94a3b8; line-height: 1.8; max-height: 400px; overflow-y: auto; padding-right: 20px;">
+                <p><strong>Data Collection:</strong> We collect Worker ID, IP metadata, and session activity to ensure security. No personal identifying information (PII) is sold or shared.</p>
+                <p><strong>Research Partners:</strong> Your anonymized data is shared with TheoremReach for market analysis under global data protection standards (GDPR/CCPA).</p>
+                <p><strong>Security:</strong> All transmissions are protected via SHA1 hashing and SSL/TLS encryption to prevent unauthorized data interception.</p>
             </div>
-            <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 20px; width: 100%;">CLOSE</button>
+            <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 35px; width: 100%; padding: 18px; border-radius: 15px; background: linear-gradient(135deg, #10b981, #059669); font-weight: 800; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);">UNDERSTOOD</button>
         </div></div>
     </div>
 
