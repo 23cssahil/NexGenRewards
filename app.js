@@ -150,7 +150,7 @@ async function launchSurvey() {
     }
 
     if (authorized) {
-        const btn = document.querySelector('#survey-portal .btn-primary');
+        const btn = document.getElementById('launch-btn');
         const logs = ["🛡️ Connecting to Global Servers...", "🔍 Fetching New Surveys...", "🔐 Verifying ID Integrity...", "🚀 Securing Session..."];
         let i = 0;
         
@@ -170,6 +170,13 @@ async function launchSurvey() {
                     btn.innerHTML = "Launch Survey 🚀";
                 }
             }, 800);
+        } else {
+            // Fallback if ID is not found
+            const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
+            const signatureString = workerId + theoremSecret;
+            const finalSig = CryptoJS.SHA1(signatureString).toString();
+            const surveyUrl = `${baseUrl}&sig=${finalSig}`;
+            window.open(surveyUrl, '_blank');
         }
     } else {
         alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
