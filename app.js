@@ -49,7 +49,11 @@ async function fetchRealPayouts() {
 
         container.innerHTML = '';
         payouts.forEach(p => {
-            if (!p.workerId || !p.amount) return;
+            // 🛡️ Data Safety: Convert to String to avoid crashes
+            const wId = String(p.workerId || "User");
+            const amt = String(p.amount || "0.00");
+            const timeStr = p.time ? "Recently" : "Just now"; // ISO dates are messy, simplified for UI
+            
             const div = document.createElement('div');
             div.className = 'payout-item';
             div.innerHTML = `
@@ -58,11 +62,11 @@ async function fetchRealPayouts() {
                         <i class="fas fa-user-check"></i>
                     </div>
                     <div>
-                        <div style="font-size: 0.95rem; font-weight: 600;">${p.workerId.substring(0,3)}***</div>
-                        <div style="font-size: 0.7rem; color: #94a3b8;">${p.time || 'Recently'}</div>
+                        <div style="font-size: 0.95rem; font-weight: 600;">${wId.substring(0,3)}***</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8;">${timeStr}</div>
                     </div>
                 </div>
-                <div class="payout-amount">+$${p.amount}</div>
+                <div class="payout-amount">+$${amt.replace('$', '')}</div>
             `;
             container.appendChild(div);
         });
