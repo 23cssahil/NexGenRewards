@@ -12,10 +12,18 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-    <div class="cursor-glow"></div>
-    
-    <nav>
-        <div class="logo">NexGen<span>Rewards</span></div>
+    <!-- 🛡️ CLOUDFLARE ENTRANCE GATE -->
+    <div id="cf-gate" style="position: fixed; inset: 0; background: #070b14; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
+        <div class="logo" style="margin-bottom: 30px; font-size: 2.5rem;">NexGen<span>Rewards</span></div>
+        <p style="color: #94a3b8; margin-bottom: 20px; font-size: 1rem;">Verifying your browser security...</p>
+        <!-- 🛡️ Smart Challenge Widget -->
+        <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-callback="onTurnstileSuccess" data-theme="dark"></div>
+        <p style="color: #475569; font-size: 0.8rem; margin-top: 40px;">Secure connection established via Cloudflare</p>
+    </div>
+
+    <div id="main-site-content" style="display: none;">
+        <nav>
+            <div class="logo">NexGen<span>Rewards</span></div>
         <div class="nav-links">
             <a href="#how-it-works">How it Works</a>
             <a href="#tips">Guidelines</a>
@@ -166,7 +174,26 @@
         </div>
     </div>
 
+    </div> <!-- End main-site-content -->
+
     <script>
+        // 🛡️ CLOUDFLARE GATE LOGIC
+        function onTurnstileSuccess(token) {
+            console.log("Cloudflare Verified!");
+            const gate = document.getElementById('cf-gate');
+            const content = document.getElementById('main-site-content');
+            
+            // Smooth transition
+            gate.style.opacity = '0';
+            gate.style.transition = '0.8s ease';
+            
+            setTimeout(() => {
+                gate.style.display = 'none';
+                content.style.display = 'block';
+                // Trigger any animations needed
+            }, 800);
+        }
+
         function openTerms() { document.getElementById('terms-modal').style.display = 'block'; }
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
@@ -174,7 +201,6 @@
         function openFraud() { document.getElementById('fraud-modal').style.display = 'block'; }
         function closeFraud() { document.getElementById('fraud-modal').style.display = 'none'; }
         
-        // Close modals on outside click
         window.onclick = function(event) {
             if (event.target.className === 'modal') {
                 event.target.style.display = "none";
