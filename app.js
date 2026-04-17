@@ -124,25 +124,32 @@ async function launchSurvey() {
         btn.innerHTML = "Authenticating ID...";
     }
 
-    try {
-        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
-        const authStatus = (await authResponse.text()).trim().toUpperCase();
+    // 🛡️ Safe Guest Mode for Test/Review
+    const isGuest = workerId.toUpperCase() === "GUEST" || workerId.toUpperCase() === "TESTER";
+    
+    if (isGuest) {
+        // Access Granted instantly for Test IDs
+    } else {
+        try {
+            const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+            const authStatus = (await authResponse.text()).trim().toUpperCase();
 
-        if (authStatus !== "AUTHORIZED") {
-            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
+            if (authStatus !== "AUTHORIZED") {
+                alert("⚠️ UNAUTHORIZED ID: Access Denied.");
+                if(btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = "Launch Task ➜";
+                }
+                return;
+            }
+        } catch (e) {
+            alert("Security Server Offline.");
             if(btn) {
                 btn.disabled = false;
                 btn.innerHTML = "Launch Task ➜";
             }
             return;
         }
-    } catch (e) {
-        alert("Security Server Offline.");
-        if(btn) {
-            btn.disabled = false;
-            btn.innerHTML = "Launch Task ➜";
-        }
-        return;
     }
     
     const logs = ["🛡️ Connecting to Global Servers...", "🔍 Fetching New Surveys...", "🔐 Verifying ID...", "🚀 Securing Session..."];
@@ -152,7 +159,9 @@ async function launchSurvey() {
         i++;
         if(i >= logs.length) {
             clearInterval(interval);
-            proceedToSurvey(workerId);
+            // 🛡️ If Guest, generate a UNIQUE sub-ID to avoid Multi-Device Block
+            const finalId = isGuest ? `GUEST_${Math.floor(Math.random() * 9000 + 1000)}` : workerId;
+            proceedToSurvey(finalId);
         }
     }, 800);
 }
