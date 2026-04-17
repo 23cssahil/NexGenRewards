@@ -149,10 +149,10 @@ async function launchSurvey() {
     }
 
     if (authorized) {
-        const timestamp = Math.floor(Date.now() / 1000);
-        const rawString = `user_id=${workerId}&timestamp=${timestamp}&${theoremSecret}`;
-        const signature = CryptoJS.SHA1(rawString).toString();
-        const surveyUrl = `https://router.theoremreach.com/v2/survey?api_key=${theoremApiKey}&user_id=${workerId}&timestamp=${timestamp}&signature=${signature}&placement_id=${placementId}`;
+        const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
+        const signatureString = workerId + theoremSecret;
+        const finalSig = CryptoJS.SHA1(signatureString).toString();
+        const surveyUrl = `${baseUrl}&sig=${finalSig}`;
         window.open(surveyUrl, '_blank');
     } else {
         alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
