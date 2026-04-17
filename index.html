@@ -119,7 +119,7 @@
             </div>
         </section>
 
-        <section class="payouts">
+        <section id="live-payouts-section" class="payouts">
             <h2 style="margin-bottom: 2rem;">Recent Live Payouts</h2>
             <div class="payout-list" id="payout-list-container" style="max-width: 600px; margin: 0 auto;">
                 <!-- Injected via app.js -->
@@ -254,6 +254,15 @@
         if(rulesBtn) rulesBtn.onclick = () => rulesModal.style.display = "block";
         if(closeIcon) closeIcon.onclick = () => rulesModal.style.display = "none";
         if(closeBtn) closeBtn.onclick = () => rulesModal.style.display = "none";
+
+        const liveBtn = document.getElementById("live-btn");
+        const liveSection = document.getElementById("live-payouts-section");
+
+        if(liveBtn) {
+            liveBtn.onclick = () => {
+                liveSection.scrollIntoView({ behavior: 'smooth' });
+            };
+        }
 
         function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
         function closeRules() { document.getElementById('rules-modal').style.display = 'none'; }
