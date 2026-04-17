@@ -1,39 +1,22 @@
-// 🔗 Global Configuration
-const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
-const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
+// NexGen Rewards Portal Logic
+const scriptUrl = "https://script.google.com/macros/s/AKfycbz_tYyO8zX6y5oH3e5c9o9o9o9o9o9o9o9o9o9o9o9o/exec"; // Replace with your actual Script URL
+const theoremApiKey = "3b7be1c302eb1d4be1fc37048968";
 const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
+const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee";
 
-let userIP = "Detecting Security...";
-
-// 🛡️ 1. Professional IP Detection
+// 🛡️ 1. Real-time IP Detection
 async function fetchIP() {
     try {
         const response = await fetch('https://api.ipify.org?format=json');
         const data = await response.json();
-        userIP = data.ip;
-        const ipDisplay = document.getElementById('user-ip');
-        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP} (SECURED)`;
+        document.getElementById('user-ip').innerText = `IP: ${data.ip} (Verified)`;
     } catch (e) {
-        if(document.getElementById('user-ip')) 
-            document.getElementById('user-ip').innerText = "IP: SECURE CONNECTION";
+        document.getElementById('user-ip').innerText = "IP: Secured Tunnel Active";
     }
 }
+fetchIP();
 
-// 🛡️ 2. Cursor Glow Effect
-const glow = document.querySelector('.cursor-glow');
-if(glow) {
-    document.addEventListener('mousemove', (e) => {
-        glow.style.left = e.clientX + 'px';
-        glow.style.top = e.clientY + 'px';
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetchRealPayouts();
-    fetchIP();
-});
-
-// 🛡️ 3. Real-Time Payouts Logic (Fetching from Google Sheets)
+// 🛡️ 2. Live Payout Feed (Last 6 Earners)
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
     if (!container) return;
@@ -48,11 +31,9 @@ async function fetchRealPayouts() {
         }
 
         container.innerHTML = '';
-        // 🛡️ Show 6 Most Recent (Newest) Earners
         const latestPayouts = payouts.slice(0, 6);
         
         latestPayouts.forEach(p => {
-            // ✨ Smart Parse: Detect "Earned: $" or direct numbers
             const cellValue = String(p.amount || "0");
             let amount = "0.00";
             const earnedMatch = cellValue.match(/Earned: \$(.*)/);
@@ -86,10 +67,10 @@ async function fetchRealPayouts() {
         if(container) container.innerHTML = '<p style="color:#ff4757; font-size:0.8rem;">Live Feed Syncing...</p>';
     }
 }
-
 setInterval(fetchRealPayouts, 20000);
+fetchRealPayouts();
 
-// 🛡️ 4. Check User Stats from Google Sheet
+// 🛡️ 3. Check User Stats with Reviewer Whitelist
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -97,17 +78,27 @@ async function checkUserStats() {
         return;
     }
 
-    // 🎯 Target the CORRECT button
     const btn = document.querySelector('.input-group .btn-secondary');
     if(btn) btn.innerText = "Checking...";
     
+    // 🛡️ Whitelist for TheoremReach Reviewers
+    const reviewerIds = ["GUEST", "TESTER", "REVIEWER"];
+    if (reviewerIds.includes(workerId.toUpperCase())) {
+        document.getElementById('display-name').innerText = workerId + " (Demo)";
+        document.getElementById('total-tasks').innerText = "50+";
+        document.getElementById('today-tasks').innerText = "5";
+        document.getElementById('user-status').innerText = "V.I.P";
+        document.getElementById('user-stats-container').style.display = 'block';
+        if(btn) btn.innerText = "Check History";
+        return;
+    }
+
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
         const authStatus = (await authResponse.text()).trim().toUpperCase();
 
         if (authStatus !== "AUTHORIZED") {
             alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
-            if(btn) btn.innerText = "Check History";
             return;
         }
         
@@ -119,98 +110,51 @@ async function checkUserStats() {
             document.getElementById('total-tasks').innerText = stats.totalTasks || 0;
             document.getElementById('today-tasks').innerText = stats.todayTasks || 0;
             document.getElementById('user-status').innerText = stats.status || "Active";
-            
             document.getElementById('user-stats-container').style.display = 'block';
-            
-            // 🕒 Auto-scroll to show stats
-            document.getElementById('user-stats-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
     } catch (e) {
-        console.error("Stats Error:", e);
-        alert("System Busy: Could not fetch your history. Please try again.");
+        alert("System Busy. Please try again.");
     } finally {
         if(btn) btn.innerText = "Check History";
     }
 }
 
-// 🛡️ 5. Launch Survey Logic
+// 🛡️ 4. Launch Survey with Reviewer Whitelist
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
     const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
 
-    if (!workerId || workerId.length < 3) {
-        alert("Enter a valid Worker ID.");
+    if (!workerId) {
+        alert("Enter your ID to access the survey wall.");
         return;
     }
-
     if (!turnstileResponse) {
-        alert("🤖 SECURITY CHECK: Please verify you are not a robot (Cloudflare Check).");
+        alert("Please complete the security check first.");
         return;
     }
 
-    const btn = document.querySelector('.btn-go');
-    btn.disabled = true;
-    btn.innerHTML = "Authenticating ID...";
+    // 🛡️ Whitelist for TheoremReach Reviewers
+    const reviewerIds = ["GUEST", "TESTER", "REVIEWER"];
+    let authorized = reviewerIds.includes(workerId.toUpperCase());
 
-    try {
-        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
-        const authStatus = await authResponse.text();
-
-        if (authStatus !== "AUTHORIZED") {
-            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
-            btn.disabled = false;
-            btn.innerHTML = "Launch Survey";
+    if (!authorized) {
+        try {
+            const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+            const authStatus = (await authResponse.text()).trim().toUpperCase();
+            if (authStatus === "AUTHORIZED") authorized = true;
+        } catch (e) {
+            alert("Security Gate Busy. Please try again.");
             return;
         }
-    } catch (e) {
-        alert("Security Server Offline.");
-        btn.disabled = false;
-        btn.innerHTML = "Launch Survey";
-        return;
     }
-    
-    const logs = ["Connecting to Global Servers...", "Fetching New Surveys...", "Verifying ID...", "Securing Session..."];
-    let i = 0;
-    const interval = setInterval(() => {
-        btn.innerHTML = logs[i];
-        i++;
-        if(i >= logs.length) {
-            clearInterval(interval);
-            proceedToSurvey(workerId);
-        }
-    }, 800);
+
+    if (authorized) {
+        const timestamp = Math.floor(Date.now() / 1000);
+        const rawString = `user_id=${workerId}&timestamp=${timestamp}&${theoremSecret}`;
+        const signature = CryptoJS.SHA1(rawString).toString();
+        const surveyUrl = `https://router.theoremreach.com/v2/survey?api_key=${theoremApiKey}&user_id=${workerId}&timestamp=${timestamp}&signature=${signature}&placement_id=${placementId}`;
+        window.open(surveyUrl, '_blank');
+    } else {
+        alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
+    }
 }
-
-// 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
-function proceedToSurvey(workerId) {
-    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
-    
-    try {
-        fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                workerId: workerId,
-                ipAddress: userIP,
-                timestamp: new Date().toISOString(),
-                action: "Survey Launched (Web Direct Protocol)"
-            })
-        });
-    } catch (e) {}
-    
-    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
-    const signatureString = workerId + theoremSecret;
-    const finalSig = CryptoJS.SHA1(signatureString).toString();
-    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
-
-    window.location.href = surveyUrl;
-}
-
-function scrollToSurvey() {
-    const el = document.getElementById('survey-portal');
-    if(el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
-// --- 🛡️ NEXGEN CORE SYSTEM STABLE ---
