@@ -1,100 +1,206 @@
-// 🔐 NEXGEN REWARDS - PREMIUM STABLE LOGIC (1-HOUR AGO VERSION)
-const theoremApiKey = "3b7be1c302eb1d4be1fc37048968";
+// 🔗 Global Configuration
 const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
+const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
+const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
 
-let currentUser = "";
-let userIP = "Unknown";
+let userIP = "Detecting...";
 
-// 🌐 Get User IP for Logs
+// 1. Fetch User IP for Security
 fetch('https://api.ipify.org?format=json')
-    .then(r => r.json())
-    .then(d => userIP = d.ip)
-    .catch(() => console.log("IP Tracking Offline"));
+    .then(response => response.json())
+    .then(data => {
+        userIP = data.ip;
+        document.getElementById('user-ip').innerText = `Your Secure IP: ${userIP}`;
+    })
+    .catch(() => {
+        document.getElementById('user-ip').innerText = "Security Check Failed. Refresh Page.";
+    });
 
-// 🔐 LOGIN HANDLER
-function login() {
-    const workerId = document.getElementById('workerId').value.trim().toUpperCase();
+// 2. Cursor Glow Effect
+const glow = document.querySelector('.cursor-glow');
+document.addEventListener('mousemove', (e) => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+});
 
+// 3. Real-Time Payouts Logic (Fetching from Google Sheets)
+async function fetchRealPayouts() {
+    const container = document.getElementById('payout-list-container');
+    try {
+        const response = await fetch(`${scriptUrl}?action=getLivePayouts`);
+        const payouts = await response.json();
+        
+        if (payouts.length === 0) {
+            container.innerHTML = '<p style="opacity:0.5; font-size:0.8rem;">Waiting for new completions...</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        payouts.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'payout-item';
+            div.innerHTML = `
+                <span><strong>${p.workerId.substring(0,3)}***</strong> just earned <strong>${p.amount}</strong></span>
+                <span style="font-size: 0.7rem; color: var(--accent);">${p.time}</span>
+            `;
+            container.appendChild(div);
+        });
+    } catch (e) {
+        console.log("Stats update failed");
+    }
+}
+
+// Initial fetch and set interval
+fetchRealPayouts();
+setInterval(fetchRealPayouts, 30000); // 🔗 Sync with Google Sheets
+
+// 4. Check User Stats from Google Sheet
+async function checkUserStats() {
+    const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
-        alert("Please enter your Authorized ID.");
+        alert("Please enter your ID first.");
         return;
     }
 
-    showLoading("Verifying Session...");
-
-    // 🕵️ Authorized ID List
-    const ALLOWED_USERS = ["SAHIL01", "AMIT03", "NEX01", "NEX02", "NEX03", "NEX04", "NEX05", "NEX06", "NEX07", "NEX08", "NEX09", "NEX10", "TEST_USER"];
+    const btn = document.querySelector('.btn-secondary');
+    btn.innerText = "Checking...";
     
-    setTimeout(() => {
-        if (ALLOWED_USERS.includes(workerId)) {
-            currentUser = workerId;
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('dashboard-view').style.display = 'block';
-            document.getElementById('display-id').innerText = workerId;
-            hideLoading();
-            // Auto check stats on login
-            checkUserStats();
-        } else {
-            hideLoading();
-            alert("ACCESS DENIED: Unauthorized ID.");
+    // 🛡️ SECURITY SHIELD: Check auth
+    try {
+        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+        const authStatus = await authResponse.text();
+
+        if (authStatus !== "AUTHORIZED") {
+            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
+            btn.innerText = "Check History";
+            return;
         }
-    }, 1000);
+    } catch (e) {
+        alert("Security Server Offline.");
+        btn.innerText = "Check History";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${scriptUrl}?workerId=${workerId}`);
+        const stats = await response.json();
+        
+        document.getElementById('display-name').innerText = workerId;
+        document.getElementById('total-tasks').innerText = stats.totalTasks;
+        document.getElementById('today-tasks').innerText = stats.todayTasks;
+        document.getElementById('user-status').innerText = stats.status;
+        
+        document.getElementById('user-stats-container').style.display = 'block';
+        
+        // 🕒 AUTO-HIDE
+        setTimeout(() => {
+            document.getElementById('user-stats-container').style.display = 'none';
+        }, 10000);
+
+    } catch (e) {
+        alert("Could not fetch stats. Make sure you have done at least 1 task.");
+    } finally {
+        btn.innerText = "Check History";
+    }
 }
 
-// 🚀 THEOREMREACH SIGNED LAUNCH
-function launchSurvey() {
-    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
-    showLoading("Syncing Secure Session...");
+// 5. Launch Survey Logic (Always Fresh Surveys)
+async function launchSurvey() {
+    const workerId = document.getElementById('workerId').value.trim();
+    
+    if (!workerId || workerId.length < 3) {
+        alert("Enter a valid Worker ID.");
+        return;
+    }
 
-    // Log Launch to Sheet
+    const btn = document.querySelector('.btn-go');
+    btn.disabled = true;
+    btn.innerHTML = "Authenticating ID...";
+
+    // 🛡️ SECURITY SHIELD
+    try {
+        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+        const authStatus = await authResponse.text();
+
+        if (authStatus !== "AUTHORIZED") {
+            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
+            btn.disabled = false;
+            btn.innerHTML = "Launch Survey";
+            return;
+        }
+    } catch (e) {
+        alert("Security Server Offline.");
+        btn.disabled = false;
+        btn.innerHTML = "Launch Survey";
+        return;
+    }
+    
+    // Visual Security Check
+    const logs = ["Connecting to Global Servers...", "Fetching New Surveys...", "Verifying ID...", "Securing Session..."];
+    let i = 0;
+    const interval = setInterval(() => {
+        btn.innerHTML = logs[i];
+        i++;
+        if(i >= logs.length) {
+            clearInterval(interval);
+            proceedToSurvey(workerId);
+        }
+    }, 800);
+}
+
+// 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
+function proceedToSurvey(workerId) {
+    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
+
+    // 🛡️ FRONTEND LOGGING: Web Protocol Activation
     try {
         fetch(scriptUrl, {
             method: 'POST',
             mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                workerId: currentUser,
+                workerId: workerId,
                 ipAddress: userIP,
+                timestamp: new Date().toISOString(),
                 action: "Survey Launched (Web Direct Protocol)"
             })
         });
     } catch (e) {}
     
-    // 🛡️ SHA1 SIGNATURE LOGIC
-    const signatureString = currentUser + theoremSecret;
+    // 🛡️ WEB DIRECT ENTRY URL
+    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
+
+    // 2. OFFICIAL HASH FORMULA: SHA1(user_id + secret_key)
+    const signatureString = workerId + theoremSecret;
     const finalSig = CryptoJS.SHA1(signatureString).toString();
-    const surveyUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${currentUser}&sig=${finalSig}`;
 
-    setTimeout(() => {
-        window.location.href = surveyUrl;
-    }, 1000);
+    // 3. Final Signed URL (sig parameter is KEY)
+    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
+
+    window.location.href = surveyUrl;
 }
 
-// 📈 FETCH EARNINGS
-function checkUserStats() {
-    document.getElementById('history-panel').style.display = 'block';
-    document.getElementById('history-text').innerText = "Syncing with Google Ledger...";
-    
-    fetch(`${scriptUrl}?user_id=${currentUser}&action=getStats`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === "success") {
-                document.getElementById('pending-amt').innerText = `$${data.earnings || '0.00'}`;
-                document.getElementById('tasks-count').innerText = data.tasks || '0';
-                document.getElementById('history-text').innerText = "Data Synced Successfully.";
-            } else {
-                document.getElementById('history-text').innerText = "No history found for this ID.";
-            }
-        })
-        .catch(() => {
-            document.getElementById('history-text').innerText = "History temporarily unavailable.";
-        });
+function scrollToSurvey() {
+    document.getElementById('survey-portal').scrollIntoView({ behavior: 'smooth' });
 }
 
-function showLoading(text) {
-    document.getElementById('loading-overlay').style.display = 'flex';
-    document.getElementById('loading-text').innerText = text;
-}
+// --- NEW FEATURES LOGIC ---
 
-function hideLoading() {
-    document.getElementById('loading-overlay').style.display = 'none';
+// Modal Logic
+const modal = document.getElementById("rules-modal");
+const rulesBtn = document.getElementById("rules-btn");
+const liveBtn = document.getElementById("live-btn");
+const closeX = document.querySelector(".close-modal");
+const closeBtn = document.getElementById("close-rules");
+
+if (rulesBtn) rulesBtn.onclick = () => modal.style.display = "block";
+if (closeX) closeX.onclick = () => modal.style.display = "none";
+if (closeBtn) closeBtn.onclick = () => modal.style.display = "none";
+window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
+
+// Live Button Scroll
+if (liveBtn) {
+    liveBtn.onclick = () => {
+        document.querySelector('.payouts').scrollIntoView({ behavior: 'smooth' });
+    };
 }
