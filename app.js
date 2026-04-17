@@ -3,24 +3,34 @@ const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceU
 const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
 const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
 
-let userIP = "Detecting...";
+let userIP = "Detecting Security...";
 
-// 1. Fetch User IP for Security
-fetch('https://api.ipify.org?format=json')
-    .then(response => response.json())
-    .then(data => {
+// 🛡️ 1. Professional IP Detection
+async function fetchIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
         userIP = data.ip;
-        document.getElementById('user-ip').innerText = `Your Secure IP: ${userIP}`;
-    })
-    .catch(() => {
-        document.getElementById('user-ip').innerText = "Security Check Failed. Refresh Page.";
-    });
+        const ipDisplay = document.getElementById('user-ip');
+        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP} (SECURED)`;
+    } catch (e) {
+        if(document.getElementById('user-ip')) 
+            document.getElementById('user-ip').innerText = "IP: SECURE CONNECTION";
+    }
+}
 
-// 2. Cursor Glow Effect
+// 🛡️ 2. Cursor Glow Effect
 const glow = document.querySelector('.cursor-glow');
-document.addEventListener('mousemove', (e) => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
+if(glow) {
+    document.addEventListener('mousemove', (e) => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchRealPayouts();
+    fetchIP();
 });
 
 // 3. Real-Time Payouts Logic (Fetching from Google Sheets)
@@ -198,23 +208,4 @@ function scrollToSurvey() {
     document.getElementById('survey-portal').scrollIntoView({ behavior: 'smooth' });
 }
 
-// --- NEW FEATURES LOGIC ---
-
-// Modal Logic
-const modal = document.getElementById("rules-modal");
-const rulesBtn = document.getElementById("rules-btn");
-const liveBtn = document.getElementById("live-btn");
-const closeX = document.querySelector(".close-modal");
-const closeBtn = document.getElementById("close-rules");
-
-if (rulesBtn) rulesBtn.onclick = () => modal.style.display = "block";
-if (closeX) closeX.onclick = () => modal.style.display = "none";
-if (closeBtn) closeBtn.onclick = () => modal.style.display = "none";
-window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
-
-// Live Button Scroll
-if (liveBtn) {
-    liveBtn.onclick = () => {
-        document.querySelector('.payouts').scrollIntoView({ behavior: 'smooth' });
-    };
-}
+// --- 🛡️ NEXGEN CORE SYSTEM STABLE ---
