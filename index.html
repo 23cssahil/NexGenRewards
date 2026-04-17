@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <!-- Cloudflare Turnstile Script -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -66,16 +65,16 @@
         </div>
 
         <div class="input-group">
-                        <input type="text" id="workerId" placeholder="Enter ID (e.g. SAHIL01 or GUEST)" class="main-input">
+                        <input type="text" id="workerId" placeholder="use id SAHIL_01 for test">
                         
                         <!-- 🛡️ Cloudflare Turnstile Widget (Inside Login Box) -->
                         <div id="cf-turnstile-container" style="display: flex; justify-content: center; margin: 15px 0;">
-                            <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+                            <div class="cf-turnstile" data-sitekey="3x00000000000000000000FF" data-theme="dark"></div>
                         </div>
 
                         <div class="btn-group">
                             <button class="btn-secondary" onclick="checkUserStats()">Check History</button>
-                            <button id="launch-btn" class="btn-primary" onclick="launchSurvey()">Launch Survey 🚀</button>
+                            <button class="btn-go" onclick="launchSurvey()">Launch Task ➜</button>
                         </div>
                     </div>
 
@@ -128,86 +127,47 @@
         </section>
     </main>
 
-    <footer>
-        <div class="footer-bottom" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05);">
+    <footer style="padding: 4rem 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="footer-bottom">
             <div style="margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
                 <span style="font-size: 0.75rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;">Portal Administrator</span>
                 <div style="display: flex; gap: 2rem; align-items: center;">
                     <a href="mailto:username47397@gmail.com" class="admin-link" title="Email Administrator">
-                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-envelope" style="font-size: 1.4rem; color: #94a3b8;"></i>
                     </a>
                     <a href="https://www.instagram.com/i.m.sahil.87" target="_blank" class="admin-link" title="Instagram">
-                        <i class="fab fa-instagram"></i>
+                        <i class="fab fa-instagram" style="font-size: 1.4rem; color: #94a3b8;"></i>
                     </a>
                     <a href="https://www.linkedin.com/in/sahil-khan-729199326" target="_blank" class="admin-link" title="LinkedIn Profile">
-                        <i class="fab fa-linkedin"></i>
+                        <i class="fab fa-linkedin" style="font-size: 1.4rem; color: #94a3b8;"></i>
                     </a>
                 </div>
             </div>
             
-            <style>
-                .admin-link { color: #94a3b8; font-size: 1.4rem; transition: 0.3s; text-decoration: none; }
-                .admin-link:hover { color: var(--primary); transform: translateY(-3px); }
-            </style>
-
             <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.85rem; flex-wrap: wrap;">
-                <a href="javascript:void(0)" onclick="openTerms()" class="footer-link">Terms of Service</a>
-                <a href="javascript:void(0)" onclick="openPrivacy()" class="footer-link">Privacy Policy</a>
-                <a href="javascript:void(0)" onclick="openRules()" class="footer-link">Fraud Protection</a>
-                <a href="mailto:support@nexgen-rewards.com" class="footer-link">Contact Support</a>
+                <a href="javascript:void(0)" onclick="openTerms()" class="footer-link" style="color:#94a3b8; text-decoration:none;">Terms of Service</a>
+                <a href="javascript:void(0)" onclick="openPrivacy()" class="footer-link" style="color:#94a3b8; text-decoration:none;">Privacy Policy</a>
+                <a href="javascript:void(0)" onclick="openRules()" class="footer-link" style="color:#94a3b8; text-decoration:none;">Fraud Protection</a>
+                <a href="mailto:support@nexgen-rewards.com" class="footer-link" style="color:#94a3b8; text-decoration:none;">Contact Support</a>
             </div>
-            <p>&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
+            <p style="color: #475569; font-size: 0.85rem;">&copy; 2026 NexGen Rewards System. Built for serious earners.</p>
         </div>
     </footer>
 
-    <!-- ⚠️ STRICT RULES MODAL (Ultra-Premium Glass UI) -->
+    <!-- ⚠️ STRICT RULES MODAL -->
     <div id="rules-modal" class="modal">
         <div class="modal-content" style="max-width: 500px; width: 95%; background: rgba(15, 23, 42, 0.95); border: 2px solid #ff4757; border-radius: 25px; backdrop-filter: blur(20px); padding: 30px; box-shadow: 0 0 40px rgba(255, 71, 87, 0.2);">
-            <span class="close-modal" id="rules-close-icon" style="color: #ff4757; font-size: 2rem; right: 20px; top: 15px;">&times;</span>
-            
+            <span class="close-modal" id="rules-close-icon" style="color: #ff4757; font-size: 2rem; cursor:pointer;">&times;</span>
             <div style="text-align: center; margin-bottom: 25px;">
-                <div style="width: 70px; height: 70px; background: rgba(255, 71, 87, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-                    <i class="fas fa-shield-alert" style="font-size: 2.2rem; color: #ff4757;"></i>
-                </div>
-                <h2 style="color: #fff; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px;">STRICT COMPLIANCE</h2>
-                <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 5px;">Required for TheoremReach Approved Status</p>
+                <i class="fas fa-shield-alert" style="font-size: 2.2rem; color: #ff4757;"></i>
+                <h2 style="color: #fff; margin-top:10px;">STRICT COMPLIANCE</h2>
             </div>
-            
-            <div class="rules-list" style="max-height: 380px; overflow-y: auto; padding-right: 10px; text-align: left;">
-                <style>
-                    .rule-card { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
-                    .rule-card:hover { background: rgba(255, 71, 87, 0.05); border-color: rgba(255, 71, 87, 0.2); }
-                    .rule-card strong { color: #ff4757; display: block; margin-bottom: 5px; font-size: 0.95rem; }
-                    .rule-card p { color: #cbd5e1; font-size: 0.85rem; line-height: 1.5; margin: 0; }
-                    .rules-list::-webkit-scrollbar { width: 5px; }
-                    .rules-list::-webkit-scrollbar-thumb { background: #ff4757; border-radius: 10px; }
-                </style>
-                
-                <div class="rule-card">
-                    <strong>🚫 NO VPN / PROXY</strong>
-                    <p>Using any VPN or Proxy results in an <u>instant permanent ban</u>. Use your local mobile data only.</p>
-                </div>
-                <div class="rule-card">
-                    <strong>⚖️ DATA CONSISTENCY</strong>
-                    <p>Use the same Age, City, and Occupation in every survey. Mismatch leads to account flags.</p>
-                </div>
-                <div class="rule-card">
-                    <strong>⏳ NO SPEEDING</strong>
-                    <p>Read questions carefully. Finishing surveys too fast will lead to payment rejection.</p>
-                </div>
-                <div class="rule-card">
-                    <strong>💎 PREMIUM PROFILE</strong>
-                    <p>Maintain a "Married & Working" profile to receive the highest paying surveys ($1.00+).</p>
-                </div>
-                <div class="rule-card">
-                    <strong>📱 ONE DEVICE RULE</strong>
-                    <p>One Worker ID per device. Do not use multiple IDs on the same mobile phone.</p>
-                </div>
+            <div style="color: #cbd5e1; font-size: 0.85rem; text-align: left; line-height: 1.6;">
+                <p>🚫 <strong>NO VPN:</strong> Instant ban for any VPN/Proxy use.</p>
+                <p>⚖️ <strong>DATA:</strong> Consistency in age/location is mandatory.</p>
+                <p>📱 <strong>DEVICE:</strong> One account per mobile device only.</p>
             </div>
-            
-            <button class="btn-primary" id="close-rules" style="margin-top: 25px; border-radius: 15px; padding: 16px; background: linear-gradient(135deg, #ff4757, #ee5253); color: white; border: none; font-weight: 800; cursor: pointer; width: 100%; font-size: 1rem; box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);">
-                I AGREE & COMPLY
-            </button>
+            <button id="close-rules" style="margin-top: 25px; padding: 15px; background: #ff4757; color: white; border: none; border-radius: 12px; width: 100%; cursor: pointer; font-weight: 800;">I AGREE & COMPLY</button>
         </div>
     </div>
 
@@ -216,14 +176,8 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeTerms()">&times;</span>
             <h2 style="color: var(--primary); margin-bottom: 20px;">📜 Terms of Service</h2>
-            <div class="rules-list" style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #444;">
-                <p><strong>1. Participation:</strong> You must be 18+ years old to use this service.</p>
-                <p><strong>2. Accuracy:</strong> You agree to provide true and accurate information during all surveys.</p>
-                <p><strong>3. Prohibited Acts:</strong> Use of VPN, proxies, or multi-accounting will result in an immediate ban.</p>
-                <p><strong>4. Rewards:</strong> Earnings are credited only after successful verification by our research partners.</p>
-                <p><strong>5. Agreement:</strong> By accessing the dashboard, you agree to comply with all rules mentioned in the Guidelines.</p>
-            </div>
-            <button class="btn-primary" onclick="closeTerms()" style="margin-top: 20px; border-radius: 10px; border:none; padding:12px; background:var(--primary); color:white; width:100%; cursor:pointer;">I AGREE</button>
+            <p style="font-size: 0.85rem; color: #444; text-align: left;">Full terms are available in the portal. Participation requires compliance with all security rules.</p>
+            <button class="btn-primary" onclick="closeTerms()" style="margin-top: 20px; padding:12px; background:var(--primary); color:white; width:100%; border:none; border-radius:10px; cursor:pointer;">CLOSE</button>
         </div>
     </div>
 
@@ -232,47 +186,28 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closePrivacy()">&times;</span>
             <h2 style="color: var(--primary); margin-bottom: 20px;">🛡️ Privacy Policy</h2>
-            <div class="rules-list" style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #444;">
-                <p><strong>1. Data Collection:</strong> We collect anonymized survey responses to share with global research partners.</p>
-                <p><strong>2. Security:</strong> Your connection is secured via SHA1 encryption and IP tracking to prevent unauthorized access.</p>
-                <p><strong>3. Third Parties:</strong> Your PII (Personally Identifiable Information) is never sold or shared with third parties.</p>
-                <p><strong>4. Cookies:</strong> We use cookies only to maintain your secure session and tracking.</p>
-            </div>
-            <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 20px; border-radius: 10px; border:none; padding:12px; background:var(--primary); color:white; width:100%; cursor:pointer;">CLOSE</button>
+            <p style="font-size: 0.85rem; color: #444; text-align: left;">We secure your data via SHA1 encryption. No personal info is sold.</p>
+            <button class="btn-primary" onclick="closePrivacy()" style="margin-top: 20px; padding:12px; background:var(--primary); color:white; width:100%; border:none; border-radius:10px; cursor:pointer;">CLOSE</button>
         </div>
     </div>
 
     </div> <!-- End main-site-content -->
 
     <script>
-        // 🛡️ CLOUDFLARE MANUAL GATE LOGIC
-        let lastTurnstileToken = ""; // 🛡️ Global Security Token
-        
         function onTurnstileSuccess(token) {
-            lastTurnstileToken = token;
             const btn = document.getElementById('gate-proceed-btn');
-            if(btn) {
-                btn.disabled = false;
-                btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
-                btn.style.color = 'white';
-                btn.style.cursor = 'pointer';
-                btn.style.boxShadow = '0 10px 20px rgba(99, 102, 241, 0.4)';
-                btn.innerText = "VERIFY & PROCEED ➜";
-            }
+            btn.disabled = false;
+            btn.style.background = 'linear-gradient(135deg, #6366f1, #a855f7)';
+            btn.style.color = 'white';
+            btn.style.cursor = 'pointer';
+            btn.innerText = "VERIFY & PROCEED ➜";
         }
 
         function revealSite() {
-            const gate = document.getElementById('cf-gate');
-            const content = document.getElementById('main-site-content');
-            gate.style.opacity = '0';
-            gate.style.transition = '0.8s ease';
-            setTimeout(() => {
-                gate.style.display = 'none';
-                content.style.display = 'block';
-            }, 800);
+            document.getElementById('cf-gate').style.display = 'none';
+            document.getElementById('main-site-content').style.display = 'block';
         }
 
-        // 📋 RULES MODAL LOGIC
         const rulesModal = document.getElementById("rules-modal");
         const rulesBtn = document.getElementById("rules-btn");
         const closeIcon = document.getElementById("rules-close-icon");
@@ -283,20 +218,17 @@
         if(closeBtn) closeBtn.onclick = () => rulesModal.style.display = "none";
 
         const liveBtn = document.getElementById("live-btn");
-        const liveSection = document.getElementById("live-payouts-section");
-
         if(liveBtn) {
             liveBtn.onclick = () => {
-                liveSection.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('live-payouts-section').scrollIntoView({ behavior: 'smooth' });
             };
         }
 
-        function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
-        function closeRules() { document.getElementById('rules-modal').style.display = 'none'; }
         function openTerms() { document.getElementById('terms-modal').style.display = 'block'; }
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
         function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; }
+        function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
         
         window.onclick = function(event) {
             if (event.target.className === 'modal') {

@@ -1,22 +1,30 @@
-// NexGen Rewards Portal Logic
+// 🔗 Global Configuration
 const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceUoSLBZA3SAx0jPm83cRBHZ-AtcJvIlmdh2GsJsjXjNyxxg0/exec";
-const theoremApiKey = "3b7be1c302eb1d4be1fc37048968";
+const theoremApiKey = "3b7be1c302eb1d4be1fc37048968"; 
 const placementId = "cf38fc1e-49db-4ec7-9164-f90a87b1e44d";
-const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee";
 
-// 🛡️ 1. Real-time IP Detection
+let userIP = "Detecting Security...";
+
+// 🛡️ 1. Professional IP Detection
 async function fetchIP() {
     try {
         const response = await fetch('https://api.ipify.org?format=json');
         const data = await response.json();
-        document.getElementById('user-ip').innerText = `IP: ${data.ip} (Verified)`;
+        userIP = data.ip;
+        const ipDisplay = document.getElementById('user-ip');
+        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP} (SECURED)`;
     } catch (e) {
-        document.getElementById('user-ip').innerText = "IP: Secured Tunnel Active";
+        if(document.getElementById('user-ip')) 
+            document.getElementById('user-ip').innerText = "IP: SECURE CONNECTION";
     }
 }
-fetchIP();
 
-// 🛡️ 2. Live Payout Feed (Last 6 Earners)
+document.addEventListener('DOMContentLoaded', () => {
+    fetchRealPayouts();
+    fetchIP();
+});
+
+// 🛡️ 2. Real-Time Payouts Logic (Fetching from Google Sheets)
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
     if (!container) return;
@@ -34,17 +42,8 @@ async function fetchRealPayouts() {
         const latestPayouts = payouts.slice(0, 6);
         
         latestPayouts.forEach(p => {
-            const cellValue = String(p.amount || "0");
-            let amount = "0.00";
-            const earnedMatch = cellValue.match(/Earned: \$(.*)/);
-            if (earnedMatch) {
-                amount = earnedMatch[1];
-            } else {
-                const numMatch = cellValue.match(/\d+(\.\d+)?/);
-                amount = numMatch ? numMatch[0] : "0.00";
-            }
-            
             const wId = String(p.workerId || "User");
+            const amt = String(p.amount || "0.00");
             const timeStr = p.time ? "Recently" : "Just now";
             
             const div = document.createElement('div');
@@ -59,7 +58,7 @@ async function fetchRealPayouts() {
                         <div style="font-size: 0.7rem; color: #94a3b8;">${timeStr}</div>
                     </div>
                 </div>
-                <div class="payout-amount">+$${amount.replace('$', '')}</div>
+                <div class="payout-amount">+$${amt.replace('$', '')}</div>
             `;
             container.appendChild(div);
         });
@@ -67,10 +66,10 @@ async function fetchRealPayouts() {
         if(container) container.innerHTML = '<p style="color:#ff4757; font-size:0.8rem;">Live Feed Syncing...</p>';
     }
 }
-setInterval(fetchRealPayouts, 20000);
-fetchRealPayouts();
 
-// 🛡️ 3. Check User Stats with Reviewer Whitelist
+setInterval(fetchRealPayouts, 20000);
+
+// 🛡️ 3. Check User Stats from Google Sheet
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -78,21 +77,9 @@ async function checkUserStats() {
         return;
     }
 
-    const btn = document.querySelector('.input-group .btn-secondary');
+    const btn = document.querySelector('.btn-secondary');
     if(btn) btn.innerText = "Checking...";
     
-    // 🛡️ Whitelist for TheoremReach Reviewers
-    const reviewerIds = ["GUEST", "TESTER", "REVIEWER"];
-    if (reviewerIds.includes(workerId.toUpperCase())) {
-        document.getElementById('display-name').innerText = workerId + " (Demo)";
-        document.getElementById('total-tasks').innerText = "50+";
-        document.getElementById('today-tasks').innerText = "5";
-        document.getElementById('user-status').innerText = "V.I.P";
-        document.getElementById('user-stats-container').style.display = 'block';
-        if(btn) btn.innerText = "Check History";
-        return;
-    }
-
     try {
         const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
         const authStatus = (await authResponse.text()).trim().toUpperCase();
@@ -111,74 +98,92 @@ async function checkUserStats() {
             document.getElementById('today-tasks').innerText = stats.todayTasks || 0;
             document.getElementById('user-status').innerText = stats.status || "Active";
             document.getElementById('user-stats-container').style.display = 'block';
+            document.getElementById('user-stats-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+
     } catch (e) {
-        alert("System Busy. Please try again.");
+        alert("System Busy: Could not fetch history.");
     } finally {
         if(btn) btn.innerText = "Check History";
     }
 }
 
-// 🛡️ 4. Launch Survey with Reviewer Whitelist
+// 🛡️ 4. Launch Survey Logic
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
-    // 🛡️ Use global token from index.html
-    const turnstileResponse = typeof lastTurnstileToken !== 'undefined' ? lastTurnstileToken : "";
+    const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]') ? document.querySelector('[name="cf-turnstile-response"]').value : "";
 
-    if (!workerId) {
-        alert("Enter your ID to access the survey wall.");
-        return;
-    }
-    if (!turnstileResponse) {
-        alert("🛡️ Security Verification: Please complete the Cloudflare check on the gate first.");
+    if (!workerId || workerId.length < 3) {
+        alert("Enter a valid Worker ID.");
         return;
     }
 
-    // 🛡️ Whitelist for TheoremReach Reviewers
-    const reviewerIds = ["GUEST", "TESTER", "REVIEWER"];
-    let authorized = reviewerIds.includes(workerId.toUpperCase());
+    const btn = document.querySelector('.btn-go');
+    if(btn) {
+        btn.disabled = true;
+        btn.innerHTML = "Authenticating ID...";
+    }
 
-    if (!authorized) {
-        try {
-            const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
-            const authStatus = (await authResponse.text()).trim().toUpperCase();
-            if (authStatus === "AUTHORIZED") authorized = true;
-        } catch (e) {
-            alert("Security Gate Busy. Please try again.");
+    try {
+        const authResponse = await fetch(`${scriptUrl}?action=checkAuth&workerId=${workerId}`);
+        const authStatus = (await authResponse.text()).trim().toUpperCase();
+
+        if (authStatus !== "AUTHORIZED") {
+            alert("⚠️ UNAUTHORIZED ID: Access Denied.");
+            if(btn) {
+                btn.disabled = false;
+                btn.innerHTML = "Launch Task ➜";
+            }
             return;
         }
-    }
-
-    if (authorized) {
-        const btn = document.getElementById('launch-btn');
-        const logs = ["🛡️ Connecting to Global Servers...", "🔍 Fetching New Surveys...", "🔐 Verifying ID Integrity...", "🚀 Securing Session..."];
-        let i = 0;
-        
+    } catch (e) {
+        alert("Security Server Offline.");
         if(btn) {
-            btn.disabled = true;
-            const interval = setInterval(() => {
-                btn.innerHTML = logs[i];
-                i++;
-                if(i >= logs.length) {
-                    clearInterval(interval);
-                    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
-                    const signatureString = workerId + theoremSecret;
-                    const finalSig = CryptoJS.SHA1(signatureString).toString();
-                    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
-                    window.open(surveyUrl, '_blank');
-                    btn.disabled = false;
-                    btn.innerHTML = "Launch Survey 🚀";
-                }
-            }, 800);
-        } else {
-            // Fallback if ID is not found
-            const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
-            const signatureString = workerId + theoremSecret;
-            const finalSig = CryptoJS.SHA1(signatureString).toString();
-            const surveyUrl = `${baseUrl}&sig=${finalSig}`;
-            window.open(surveyUrl, '_blank');
+            btn.disabled = false;
+            btn.innerHTML = "Launch Task ➜";
         }
-    } else {
-        alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
+        return;
     }
+    
+    const logs = ["🛡️ Connecting to Global Servers...", "🔍 Fetching New Surveys...", "🔐 Verifying ID...", "🚀 Securing Session..."];
+    let i = 0;
+    const interval = setInterval(() => {
+        if(btn) btn.innerHTML = logs[i];
+        i++;
+        if(i >= logs.length) {
+            clearInterval(interval);
+            proceedToSurvey(workerId);
+        }
+    }, 800);
+}
+
+// 🚀 THEOREMREACH OFFICIAL WEB DIRECT ENTRY PROTOCOL
+function proceedToSurvey(workerId) {
+    const theoremSecret = "bb1603570b9a6682301d9a406731ba5efedde4ee"; 
+    
+    try {
+        fetch(scriptUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                workerId: workerId,
+                ipAddress: userIP,
+                timestamp: new Date().toISOString(),
+                action: "Survey Launched (Web Direct Protocol)"
+            })
+        });
+    } catch (e) {}
+    
+    const baseUrl = `https://theoremreach.com/respondent_entry/direct?api_key=${theoremApiKey}&user_id=${workerId}`;
+    const signatureString = workerId + theoremSecret;
+    const finalSig = CryptoJS.SHA1(signatureString).toString();
+    const surveyUrl = `${baseUrl}&sig=${finalSig}`;
+
+    window.location.href = surveyUrl;
+}
+
+function scrollToSurvey() {
+    const el = document.getElementById('survey-portal');
+    if(el) el.scrollIntoView({ behavior: 'smooth' });
 }
