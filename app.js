@@ -52,10 +52,19 @@ async function fetchRealPayouts() {
         const latestPayouts = payouts.slice(0, 6);
         
         latestPayouts.forEach(p => {
-            // 🛡️ Data Safety: Convert to String to avoid crashes
+            // ✨ Smart Parse: Detect "Earned: $" or direct numbers
+            const cellValue = String(p.amount || "0");
+            let amount = "0.00";
+            const earnedMatch = cellValue.match(/Earned: \$(.*)/);
+            if (earnedMatch) {
+                amount = earnedMatch[1];
+            } else {
+                const numMatch = cellValue.match(/\d+(\.\d+)?/);
+                amount = numMatch ? numMatch[0] : "0.00";
+            }
+            
             const wId = String(p.workerId || "User");
-            const amt = String(p.amount || "0.00");
-            const timeStr = p.time ? "Recently" : "Just now"; // ISO dates are messy, simplified for UI
+            const timeStr = p.time ? "Recently" : "Just now";
             
             const div = document.createElement('div');
             div.className = 'payout-item';
