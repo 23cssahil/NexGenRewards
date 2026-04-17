@@ -1,12 +1,12 @@
-let userIP = "Detecting...";
-const scriptUrl = "/api/generate-link"; // 🛡️ Ab ye hamare secure API ko point karega
+let userIP = "Detecting Security...";
+const apiBase = "/api/generate-link"; // 🛡️ Ye ek hi link kaafi hai ab!
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchRealPayouts();
     fetchIP();
 });
 
-// 🛡️ BFCache Fix: Reset buttons when user comes back (Back Button)
+// 🛡️ BFCache Fix: Reset buttons
 window.addEventListener('pageshow', (event) => {
     const launchBtn = document.getElementById('launch-btn');
     if (launchBtn) {
@@ -18,11 +18,6 @@ window.addEventListener('pageshow', (event) => {
         historyBtn.disabled = false;
         historyBtn.innerText = "Check History";
     }
-    const rulesBtn = document.getElementById('rules-btn-main');
-    if (rulesBtn) {
-        rulesBtn.disabled = false;
-        rulesBtn.innerHTML = "📋 Strict Rules";
-    }
 });
 
 // 🛡️ 1. Fetch User IP
@@ -32,29 +27,27 @@ async function fetchIP() {
         const data = await res.json();
         userIP = data.ip;
         const ipDisplay = document.getElementById('user-ip');
-        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP}`;
+        if(ipDisplay) ipDisplay.innerText = `IP: ${userIP} (SECURED)`;
     } catch (e) {
         userIP = "Unknown";
     }
 }
 
-// 🛡️ 2. Real-Time Payouts Logic (Social Proof)
+// 🛡️ 2. Real-Time Payouts (via Master API)
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
+    if (!container) return;
     try {
-        const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTqI67V_T71O1H6-q9q9-9q9-9q9-9q9-9q9/pub?output=csv');
-        const data = await res.text();
-        const rows = data.split('\n').slice(1);
-        const payouts = rows.map(r => {
-            const cols = r.split(',');
-            return { workerId: cols[0], amount: cols[3], time: cols[2] };
-        }).filter(p => p.workerId && p.amount);
-
-        if(!container) return;
-        container.innerHTML = '';
-        const latestPayouts = payouts.slice(0, 6);
+        const res = await fetch(`${apiBase}?action=getPayouts`);
+        const payouts = await res.json();
         
-        latestPayouts.forEach(p => {
+        if (!Array.isArray(payouts) || payouts.length === 0) {
+            container.innerHTML = '<p style="opacity:0.5; font-size:0.8rem; padding: 20px;">Waiting for new completions...</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        payouts.slice(0, 6).forEach(p => {
             const rawId = String(p.workerId || "User");
             const wId = rawId.startsWith("GUEST") ? "GUEST" : rawId;
             const amt = String(p.amount || "0.00");
@@ -77,22 +70,21 @@ async function fetchRealPayouts() {
             container.appendChild(div);
         });
     } catch (e) {
-        if(container) container.innerHTML = '<p style="color:#ff4757; font-size:0.8rem;">Live Feed Syncing...</p>';
+        container.innerHTML = '<p style="color:#6366f1; font-size:0.8rem;">Syncing Live Data...</p>';
     }
 }
 
-setInterval(fetchRealPayouts, 20000);
+setInterval(fetchRealPayouts, 25000);
 
-// 🛡️ 3. Smart Availability Checker (via Secure API)
+// 🛡️ 3. Smart Availability Checker (via Master API)
 async function checkTheoremAvailability(workerId) {
     const badge = document.getElementById('survey-availability-badge');
     const text = document.getElementById('availability-text');
     if(!badge || !text) return;
 
     text.innerText = "Checking Surveys...";
-    
     try {
-        const res = await fetch(`/api/generate-link?action=checkAvailability&workerId=${workerId}&ipAddress=${userIP}`);
+        const res = await fetch(`${apiBase}?action=checkAvailability&workerId=${workerId}&ipAddress=${userIP}`);
         const data = await res.json();
         
         if(data.surveys_available) {
@@ -110,7 +102,7 @@ async function checkTheoremAvailability(workerId) {
     }
 }
 
-// 🛡️ 4. Check User Stats (History)
+// 🛡️ 4. Check User Stats (via Master API)
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -120,6 +112,7 @@ async function checkUserStats() {
 
     checkTheoremAvailability(workerId);
 
+    // GUEST Mode
     if (workerId.toUpperCase() === 'GUEST' || workerId.toUpperCase() === 'TESTER') {
         const statsContainer = document.getElementById('user-stats-container');
         if(statsContainer) {
@@ -136,34 +129,32 @@ async function checkUserStats() {
     if(btn) btn.innerText = "Checking...";
     
     try {
-        // Note: Replace with your actual history sheet URL if needed
-        const res = await fetch(`https://docs.google.com/spreadsheets/d/e/2PACX-1vTqI67V_T71O1H6-q9q9-9q9-9q9-9q9-9q9/pub?output=csv`);
-        const data = await res.text();
-        const rows = data.split('\n');
-        const userRow = rows.find(r => r.includes(workerId));
+        const res = await fetch(`${apiBase}?action=checkStats&workerId=${workerId}`);
+        const data = await res.json();
 
         if (btn) btn.innerText = "Check History";
 
-        if (!userRow) {
-            alert("⚠️ Worker ID not found in database.");
+        if (data.error === "UNAUTHORIZED") {
+            alert(`⚠️ ACCESS DENIED: Worker ID "${workerId}" is not authorized.`);
             return;
         }
 
         const statsContainer = document.getElementById('user-stats-container');
-        if(statsContainer) {
+        if(statsContainer && !data.error) {
             statsContainer.style.display = 'block';
-            const cols = userRow.split(',');
             document.getElementById('display-name').innerText = workerId;
-            document.getElementById('total-tasks').innerText = cols[1] || "0";
-            document.getElementById('today-tasks').innerText = cols[2] || "0";
-            document.getElementById('user-status').innerText = "Verified";
+            document.getElementById('total-tasks').innerText = data.totalTasks || 0;
+            document.getElementById('today-tasks').innerText = data.todayTasks || 0;
+            document.getElementById('user-status').innerText = data.status || "Active";
+            statsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     } catch (e) {
         if (btn) btn.innerText = "Check History";
+        alert("System Busy. Please try again later.");
     }
 }
 
-// 🛡️ 5. Launch Survey (via Secure API)
+// 🛡️ 5. Launch Survey (via Master API)
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
     const turnstileResponse = typeof turnstile !== 'undefined' ? turnstile.getResponse() : "";
@@ -179,25 +170,25 @@ async function launchSurvey() {
     }
 
     const btn = document.getElementById('launch-btn');
-    const isGuest = workerId.toUpperCase() === 'GUEST' || workerId.toUpperCase() === 'TESTER';
-    const finalId = isGuest ? `GUEST_${Math.floor(Math.random() * 9000 + 1000)}` : workerId;
-
     if(btn) {
         btn.disabled = true;
-        btn.innerHTML = "Securing Session...";
+        btn.innerHTML = "Authenticating Session...";
     }
 
+    const isGuest = workerId.toUpperCase() === "GUEST" || workerId.toUpperCase() === "TESTER";
+    const finalId = isGuest ? `GUEST_${Math.floor(Math.random() * 9000 + 1000)}` : workerId;
+
     try {
-        const res = await fetch(`/api/generate-link?action=launch&workerId=${finalId}&ipAddress=${userIP}`);
+        const res = await fetch(`${apiBase}?action=launch&workerId=${finalId}&ipAddress=${userIP}`);
         const data = await res.json();
         
         if (data.url) {
             window.location.href = data.url;
         } else {
-            throw new Error("Link error");
+            throw new Error("Launch failed");
         }
     } catch (e) {
-        alert("⚠️ Security Engine Error. Please try again.");
+        alert("⚠️ Security Protocol Error. Redoing check...");
         if(btn) {
             btn.disabled = false;
             btn.innerHTML = "Launch Task ➜";
