@@ -285,15 +285,37 @@ input:focus {
 }
 
 .payout-item {
-    background: var(--glass);
-    padding: 1.2rem;
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.2rem 1.8rem;
+    border-radius: 20px;
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     animation: slideInUp 0.5s ease-out;
+    transition: 0.3s;
+}
+
+.payout-item:hover {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: rgba(99, 102, 241, 0.2);
+    transform: translateX(5px);
+}
+
+.payout-item strong {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.payout-amount {
+    color: #10b981;
+    font-weight: 800;
+    font-size: 1.1rem;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 4px 12px;
+    border-radius: 8px;
 }
 
 @keyframes slideInUp {

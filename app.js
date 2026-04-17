@@ -40,8 +40,16 @@ async function fetchRealPayouts() {
             const div = document.createElement('div');
             div.className = 'payout-item';
             div.innerHTML = `
-                <span><strong>${p.workerId.substring(0,3)}***</strong> just earned <strong>${p.amount}</strong></span>
-                <span style="font-size: 0.7rem; color: var(--accent);">${p.time}</span>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.95rem; font-weight: 600;">${p.workerId.substring(0,3)}***</div>
+                        <div style="font-size: 0.7rem; color: var(--text-dim);">${p.time}</div>
+                    </div>
+                </div>
+                <div class="payout-amount">+$${p.amount}</div>
             `;
             container.appendChild(div);
         });
