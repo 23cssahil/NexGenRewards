@@ -70,16 +70,6 @@
                                 <span class="lbl">Level</span>
                             </div>
                         </div>
-                        
-                        <!-- 🛡️ Tax & Verification Section -->
-                        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
-                            <div style="font-size: 0.8rem; color: #94a3b8;">
-                                <i class="fas fa-file-invoice-dollar"></i> Tax Status: <span id="tax-status" style="color: #ff9f43; font-weight: 700;">PENDING</span>
-                            </div>
-                            <button onclick="openTaxModal()" style="background: rgba(255, 159, 67, 0.1); border: 1px solid #ff9f43; color: #ff9f43; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
-                                Update Tax Info
-                            </button>
-                        </div>
                     </div>
 
                     <div class="action-buttons">
@@ -146,23 +136,6 @@
         </div>
     </div>
 
-    <!-- 📄 TAX MODAL -->
-    <div id="tax-modal" class="modal">
-        <div class="modal-content" style="max-width: 450px; background: #fff; border-radius: 20px; color: #2d3436; padding: 30px;">
-            <span class="close-modal" onclick="closeTaxModal()">&times;</span>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <i class="fas fa-file-signature" style="font-size: 2.5rem; color: #ff9f43; margin-bottom: 15px;"></i>
-                <h2 style="font-weight: 800; color: #2d3436;">Tax Compliance</h2>
-                <p style="font-size: 0.85rem; color: #636e72;">Required for payouts exceeding $10.00</p>
-            </div>
-            <form onsubmit="event.preventDefault(); submitTax();">
-                <input type="text" placeholder="Full Legal Name" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dfe6e9; border-radius: 10px;">
-                <input type="text" placeholder="Tax ID / PAN Number" required style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #dfe6e9; border-radius: 10px;">
-                <button type="submit" style="width: 100%; padding: 15px; background: #ff9f43; color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer;">SUBMIT TAX INFO</button>
-            </form>
-        </div>
-    </div>
-
     <!-- 📄 TERMS MODAL -->
     <div id="terms-modal" class="modal">
         <div class="modal-content" style="max-width: 500px; background: #fff; border-radius: 20px; color: #2d3436; padding: 30px;">
@@ -199,19 +172,10 @@
         // 📋 MODAL HANDLERS
         function openRules() { document.getElementById('rules-modal').style.display = 'block'; }
         function closeRules() { document.getElementById('rules-modal').style.display = 'none'; }
-        function openTaxModal() { document.getElementById('tax-modal').style.display = 'block'; }
-        function closeTaxModal() { document.getElementById('tax-modal').style.display = 'none'; }
         function openTerms() { document.getElementById('terms-modal').style.display = 'block'; }
         function closeTerms() { document.getElementById('terms-modal').style.display = 'none'; }
         function openPrivacy() { document.getElementById('privacy-modal').style.display = 'block'; }
         function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; }
-
-        function submitTax() {
-            alert("✅ Tax Info Submitted! Reviewing...");
-            closeTaxModal();
-            document.getElementById('tax-status').innerText = "VERIFIED";
-            document.getElementById('tax-status').style.color = "#10b981";
-        }
 
         window.onclick = (e) => { if(e.target.className === 'modal') e.target.style.display = "none"; }
     </script>
