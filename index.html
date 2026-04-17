@@ -46,7 +46,7 @@
                         <div id="user-ip" class="ip-badge">IP: Detecting Security...</div>
                         <h2>Member Dashboard</h2>
                         <div class="action-buttons">
-                            <button class="btn-secondary" onclick="openRules()">📋 Strict Rules</button>
+                            <button id="rules-btn-main" class="btn-secondary" onclick="openRules()">📋 Strict Rules</button>
                             <button class="btn-live" onclick="document.getElementById('live-payouts-section').scrollIntoView({behavior:'smooth'})">
                                 <span class="pulse"></span> LIVE EARNERS
                             </button>
@@ -56,8 +56,8 @@
                             <input type="text" id="workerId" placeholder="use id=GUEST for test">
                             <div class="cf-turnstile" data-sitekey="3x00000000000000000000FF" data-theme="dark"></div>
                             <div class="btn-group">
-                                <button class="btn-secondary" onclick="checkUserStats()">Check History</button>
-                                <button class="btn-go" onclick="launchSurvey()">Launch Task ➜</button>
+                                <button id="history-btn-main" class="btn-secondary" onclick="checkUserStats()">Check History</button>
+                                <button id="launch-btn" class="btn-go" onclick="launchSurvey()">Launch Task ➜</button>
                             </div>
                         </div>
 

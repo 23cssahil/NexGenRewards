@@ -26,14 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 🛡️ BFCache Fix: Reset buttons when user comes back (Back Button)
 window.addEventListener('pageshow', (event) => {
-    const btn = document.querySelector('.btn-go');
-    if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = "Launch Task ➜";
+    const launchBtn = document.getElementById('launch-btn');
+    if (launchBtn) {
+        launchBtn.disabled = false;
+        launchBtn.innerHTML = "Launch Task ➜";
     }
-    const historyBtn = document.querySelector('.btn-secondary');
+    const historyBtn = document.getElementById('history-btn-main');
     if (historyBtn) {
+        historyBtn.disabled = false;
         historyBtn.innerText = "Check History";
+    }
+    const rulesBtn = document.getElementById('rules-btn-main');
+    if (rulesBtn) {
+        rulesBtn.disabled = false;
+        rulesBtn.innerHTML = "📋 Strict Rules";
     }
 });
 
