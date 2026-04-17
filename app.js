@@ -6,11 +6,41 @@ const scriptUrl = "https://script.google.com/macros/s/AKfycbzDNay7ML_NVEkGltGceU
 let currentUser = "";
 let userIP = "Unknown";
 
-// 🌐 Get User IP for Security Logs
+// 🌐 Get User IP for Security Logs & Display
 fetch('https://api.ipify.org?format=json')
     .then(r => r.json())
-    .then(d => userIP = d.ip)
+    .then(d => {
+        userIP = d.ip;
+        if(document.getElementById('user-ip-display')) {
+            document.getElementById('user-ip-display').innerText = d.ip;
+        }
+    })
     .catch(() => console.log("IP Tracking Offline"));
+
+// 🛡️ SECURITY GATE VERIFICATION
+function verifyHuman() {
+    const spinner = document.getElementById('check-spinner');
+    if (spinner.classList.contains('verified')) return;
+
+    spinner.classList.add('loading');
+    
+    // Simulate high-security browser check
+    setTimeout(() => {
+        spinner.classList.remove('loading');
+        spinner.classList.add('verified');
+        
+        // Show success and unlock content
+        setTimeout(() => {
+            document.getElementById('security-gate').style.opacity = '0';
+            document.getElementById('security-gate').style.transition = '0.5s';
+            
+            setTimeout(() => {
+                document.getElementById('security-gate').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }, 500);
+        }, 800);
+    }, 1500);
+}
 
 // 🔐 LOGIN HANDLER
 function login() {
