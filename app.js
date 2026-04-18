@@ -1,12 +1,12 @@
-let userIP = "Detecting Security...";
-const apiBase = "/api/generate-link"; // 🛡️ Ye ek hi link kaafi hai ab!
+let userIP = "Detecting...";
+const apiBase = "/api/generate-link"; 
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchRealPayouts();
     fetchIP();
 });
 
-// 🛡️ BFCache Fix: Reset buttons
+// Page reset logic for BFCache/Back Button
 window.addEventListener('pageshow', (event) => {
     const launchBtn = document.getElementById('launch-btn');
     if (launchBtn) {
@@ -18,9 +18,14 @@ window.addEventListener('pageshow', (event) => {
         historyBtn.disabled = false;
         historyBtn.innerText = "Check History";
     }
+    const rulesBtn = document.getElementById('rules-btn-main');
+    if (rulesBtn) {
+        rulesBtn.disabled = false;
+        rulesBtn.innerHTML = "📋 Strict Rules";
+    }
 });
 
-// 🛡️ 1. Fetch User IP
+// Fetching user IP for security logs
 async function fetchIP() {
     try {
         const res = await fetch('https://api.ipify.org?format=json');
@@ -33,7 +38,7 @@ async function fetchIP() {
     }
 }
 
-// 🛡️ 2. Real-Time Payouts (via Master API)
+// Live payouts feed handler
 async function fetchRealPayouts() {
     const container = document.getElementById('payout-list-container');
     if (!container) return;
@@ -76,7 +81,7 @@ async function fetchRealPayouts() {
 
 setInterval(fetchRealPayouts, 25000);
 
-// 🛡️ 3. Smart Availability Checker (via Master API)
+// Survey availability check via backend API
 async function checkTheoremAvailability(workerId) {
     const badge = document.getElementById('survey-availability-badge');
     const text = document.getElementById('availability-text');
@@ -97,12 +102,12 @@ async function checkTheoremAvailability(workerId) {
             badge.style.color = "#94a3b8";
         }
     } catch (e) {
-        text.innerText = "Survey Session: ACTIVE 🛡️";
+        text.innerText = "Survey Session: ACTIVE";
         badge.style.color = "#6366f1";
     }
 }
 
-// 🛡️ 4. Check User Stats (via Master API)
+// Worker history and status handler
 async function checkUserStats() {
     const workerId = document.getElementById('workerId').value.trim();
     if (!workerId) {
@@ -112,7 +117,7 @@ async function checkUserStats() {
 
     checkTheoremAvailability(workerId);
 
-    // GUEST Mode
+    // Guest mode bypass
     if (workerId.toUpperCase() === 'GUEST' || workerId.toUpperCase() === 'TESTER') {
         const statsContainer = document.getElementById('user-stats-container');
         if(statsContainer) {
@@ -154,7 +159,7 @@ async function checkUserStats() {
     }
 }
 
-// 🛡️ 5. Launch Survey (via Master API)
+// Main survey launch protocol
 async function launchSurvey() {
     const workerId = document.getElementById('workerId').value.trim();
     const turnstileResponse = typeof turnstile !== 'undefined' ? turnstile.getResponse() : "";
